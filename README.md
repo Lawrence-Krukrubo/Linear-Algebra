@@ -3,7 +3,7 @@ This Repo features a refresher of Linear Algebra concepts from a few courses, st
 In these lessons, we cover some of the most common Vector operations we'll encounter in in applications of Linear-Algebra in real life.
 
 <p align="center">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Linear_subspaces_with_shading.svg/1200px-Linear_subspaces_with_shading.svg.png">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Linear_subspaces_with_shading.svg/1200px-Linear_subspaces_with_shading.svg.png" height="400" width="600">
 </p>
 
 ### Features:
