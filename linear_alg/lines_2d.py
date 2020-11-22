@@ -1,5 +1,6 @@
 from .vector import Vector
 from .decimal_ import MyDecimal
+import numpy as np
 
 
 class Lines2D(object):
@@ -15,7 +16,7 @@ class Lines2D(object):
         self.dimension = 2
         self.normal_vector = Vector(self.coefficients)
 
-        num = [int, float]
+        num = [int, float, np.int32, np.float32, np.int64, np.float64]
         assert self.dimension == len(self.coefficients), 'len(coefficients) Must Be == 2!'
         assert type(self.constant_term) in num, 'Constant-Term Must Be a Number!'
         for i in self.coefficients:

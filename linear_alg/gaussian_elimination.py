@@ -2,6 +2,7 @@ from .ge_helper import GeHelper
 import matplotlib.pyplot as plt
 import numpy as np
 from copy import deepcopy
+import string
 
 
 class GaussianElimination(GeHelper):
@@ -11,8 +12,12 @@ class GaussianElimination(GeHelper):
         where n >= 3, using the
         Gaussian-Elimination Algorithm
     """
-    No_Solution = 'INCONSISTENT:(system of equations)'
-    Infinite_No_Variables = 'INFINITE INTERSECTIONS:(No Pivot and Free Variables)'
+    alpha = string.ascii_uppercase
+    alpha = alpha[-3:] + alpha[:-3]
+
+    No_Solution = 'INCONSISTENT:(System of Equations with No Solution)'
+    Infinite_Solution = 'INFINITE INTERSECTIONS:(System of Equations with Infinite Solutions)'
+    Unique_Solution = 'INTERSECTION:(System of Equations with One Unique Solution)'
 
     def compute_triangular_form(self):
         """Compute and return the triangular
@@ -36,6 +41,7 @@ class GaussianElimination(GeHelper):
                     y = self.plane_objects[ind].coefficients[start-1]
                     self.multiply_row(start-1, y), self.multiply_row(ind, x)
                     self.subtract_rows(start-1, ind)
+
                     self.plane_objects[start-1] = base
             start += 1
 
@@ -75,8 +81,7 @@ class GaussianElimination(GeHelper):
         self.round_off()  # Round-off each coefficient to max 4 D.P
 
         if self.is_inconsistent():
-            print(self)
-            return self.No_Solution
+            return self
 
         # Now divide each equation by its pivot variable to get
         # the value of the pivot and any free variables.
@@ -103,14 +108,21 @@ class GaussianElimination(GeHelper):
         :return: Return the tuple of unique points
                 or False
         """
-        x = deepcopy(self)
-        x = x.compute_rref()
+        p = deepcopy(self)
+        p = p.compute_rref()
+        non_zero_index = p.first_non_zero_index()
+
         points = []
-        for ind, plane in enumerate(x.plane_objects):
+        for ind, plane in enumerate(p.plane_objects):
             if sum(plane.coefficients) <= 1:
                 points.append(plane.constant_term)
             else:
-                return 0
+                x = plane.coefficients[non_zero_index[ind]] == 1
+                if x:
+                    # It's same line
+                    return float('inf')
+                # Or, No intersection
+                return None
 
         return tuple(points)
 
@@ -133,7 +145,7 @@ class GaussianElimination(GeHelper):
 
         v1, v2, k = -5, 5, 0
 
-        if intersect:
+        if type(intersect) is tuple:
             kmin = min(intersect)
             kmax = max(intersect)
             v1, v2 = kmin-3, kmax+3
@@ -148,14 +160,43 @@ class GaussianElimination(GeHelper):
         plt.legend(loc="upper right")
 
         plt.title('Linear System of Equations', fontsize=12)
-        if intersect:
+        if type(intersect) is tuple:
             print('Intersection:', (intersect[0], intersect[1]))
             plt.scatter(intersect[0], intersect[1], color='black')
             plt.annotate('intersect', (intersect[0]+0.1, intersect[1]+0.1))
+        elif type(intersect) is float:
+            print('Infinitely Many Solutions:')
+            plt.annotate('Infinite', (0, intercepts[0]))
 
         plt.grid(linestyle='dotted')
         plt.show()
 
+    def summary(self):
+        """Give a Summary of the
+        System of Equation
+
+        :return:
+        """
+        x = deepcopy(self)
+        y = deepcopy(self)
+        z = deepcopy(self)
+
+        # For Inconsistent Equations
+        x.compute_triangular_form()
+        if x.is_inconsistent():
+            return self.No_Solution
+
+        # For Unique Intersection
+        if y.unique_intersection():
+            intersection = y.unique_intersection()
+            if type(intersection) is tuple:
+                d = {}
+                for ind, item in enumerate(intersection):
+                    d[y.alpha[ind]] = item
+                print(y.Unique_Solution)
+                return d
+
+        # For infinitely many intersections:
 
 # if __name__ == '__main__':
 #     # CODING GE-SOLUTION

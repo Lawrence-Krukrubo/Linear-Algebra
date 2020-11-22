@@ -1,5 +1,6 @@
 from .vector import Vector
 from .decimal_ import MyDecimal
+import numpy as np
 
 
 class Planes3D(object):
@@ -23,7 +24,7 @@ class Planes3D(object):
         self.normal_vector = Vector(self.coefficients)
 
         assert self.dimension == len(self.coefficients), 'len(coefficients) Must Be == 3'
-        num = [int, float]
+        num = [int, float, np.int32, np.float32, np.int64, np.float64]
         assert type(self.constant_term) in num, 'Constant-Term Must Be a Number!'
         for i in self.coefficients:
             assert type(i) in num, 'Coefficients  Must Be Numerical!'
