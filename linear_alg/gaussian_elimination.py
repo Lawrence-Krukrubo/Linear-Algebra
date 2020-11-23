@@ -53,49 +53,50 @@ class GaussianElimination(GeHelper):
         :return: A reduced system of equations
         """
         # Now compute the triangular form
-        self.compute_triangular_form()
-        self.round_off()
-        start = self.dimension - 1
+        self_ = deepcopy(self)
+        self_.compute_triangular_form()
+        self_.round_off()
+        start = self_.dimension - 1
 
         while start:
-            lists = [True if i.coefficients[start] else False for i in self.plane_objects]
+            lists = [True if i.coefficients[start] else False for i in self_.plane_objects]
             lists.reverse()
             base_mark = True
-            count = len(self.plane_objects)-1
+            count = len(self_.plane_objects)-1
             x, y, base_row, base = [None]*4
 
             for val in lists:
                 if val and base_mark:
                     base_row = count
-                    base = self.plane_objects[base_row]
+                    base = self_.plane_objects[base_row]
                     x = base.coefficients[start]
                     base_mark = False
                 elif val:
-                    y = self.plane_objects[count].coefficients[start]
-                    self.multiply_row(count, x), self.multiply_row(base_row, y)
-                    self.subtract_rows(base_row, count)
-                    self.plane_objects[base_row] = base
+                    y = self_.plane_objects[count].coefficients[start]
+                    self_.multiply_row(count, x), self_.multiply_row(base_row, y)
+                    self_.subtract_rows(base_row, count)
+                    self_.plane_objects[base_row] = base
                 count -= 1
             start -= 1
 
-        self.round_off()  # Round-off each coefficient to max 4 D.P
+        self_.round_off()  # Round-off each coefficient to max 4 D.P
 
-        if self.is_inconsistent():
-            return self
+        if self_.is_inconsistent():
+            return self_
 
         # Now divide each equation by its pivot variable to get
         # the value of the pivot and any free variables.
 
-        check = self.first_non_zero_index()
+        check = self_.first_non_zero_index()
 
         for ind, val in enumerate(check):
             if val == -float('inf'):
                 continue
-            v = self.plane_objects[ind].coefficients[val]
-            self.divide_row(ind, v)
+            v = self_.plane_objects[ind].coefficients[val]
+            self_.divide_row(ind, v)
 
-        self.round_off(3)
-        return self
+        self_.round_off(3)
+        return self_
 
     def unique_intersection(self):
         """Confirm if SoE has a unique point
@@ -108,8 +109,7 @@ class GaussianElimination(GeHelper):
         :return: Return the tuple of unique points
                 or False
         """
-        p = deepcopy(self)
-        p = p.compute_rref()
+        p = self.compute_rref()
         non_zero_index = p.first_non_zero_index()
 
         points = []
@@ -166,7 +166,10 @@ class GaussianElimination(GeHelper):
             plt.annotate('intersect', (intersect[0]+0.1, intersect[1]+0.1))
         elif type(intersect) is float:
             print('Infinitely Many Solutions:')
-            plt.annotate('Infinite', (0, intercepts[0]))
+            plt.annotate('Infinite', (0, intercepts[0]+0.1))
+        else:
+            print('No Intersection: (no solution)')
+            plt.annotate('None', (0, slopes[-1]+0.1))
 
         plt.grid(linestyle='dotted')
         plt.show()
@@ -179,7 +182,6 @@ class GaussianElimination(GeHelper):
         """
         x = deepcopy(self)
         y = deepcopy(self)
-        z = deepcopy(self)
 
         # For Inconsistent Equations
         x.compute_triangular_form()
@@ -195,8 +197,9 @@ class GaussianElimination(GeHelper):
                     d[y.alpha[ind]] = item
                 print(y.Unique_Solution)
                 return d
-
-        # For infinitely many intersections:
+            # For infinite Intersections
+            else:
+                return self.Infinite_Solution
 
 # if __name__ == '__main__':
 #     # CODING GE-SOLUTION
