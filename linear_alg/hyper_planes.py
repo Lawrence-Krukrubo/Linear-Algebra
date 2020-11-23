@@ -50,7 +50,7 @@ class HyperPlanes(object):
         return self_2d.is_parallel_to(other_2d)
 
     def find_point(self):
-        """Given a hyper-plane in n-D
+        """Given a hyper-plane in n-Dimension
             find any given point
 
         :return: a n-Tuple of coordinates
