@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 
 class Vector(object):
@@ -22,6 +23,10 @@ class Vector(object):
 
         except TypeError:
             raise TypeError('The coordinates must be an iterable')
+
+        num = [int, float, np.int32, np.float32, np.int64, np.float64]
+        for i in self.coordinates:
+            assert type(i) in num, 'Coefficients  Must Be Numerical!'
 
     def __str__(self):
         return 'Vector: {}'.format(self.coordinates)
