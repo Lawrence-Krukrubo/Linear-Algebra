@@ -51,7 +51,9 @@ class Planes3D(object):
 
     def find_point(self):
         """Given a plane in 3D
-            find any given point
+            find any given point.
+            Specifically, find the value of z,
+            when x and y are zero.
 
         :return: a Tuple of x,y,z coordinates
         """

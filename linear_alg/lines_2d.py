@@ -65,14 +65,16 @@ class Lines2D(object):
         x, y = self.coefficients[-1], -(self.coefficients[0])
         b = Vector([x, y])
 
-        if a.is_orthogonal(b):
+        if a.is_orthogonal_to(b):
             return b
 
         return None
 
     def find_point(self):
         """Given a line in 2D
-            find any given point
+            find any given point.
+            Specifically, find the value
+            of y, if x is 0. (y-intercept)
         :return: a Tuple of x,y coordinates
         """
         # Let's assume x = 0
@@ -83,9 +85,11 @@ class Lines2D(object):
 
     def find_point2(self):
         """Given a line in 2D
-                    find any given point
-                :return: a Tuple of x,y coordinates
-                """
+            find any given point.
+            Specifically, find the value
+            of x, if y is 0. (x-intercept)
+        :return: a Tuple of x,y coordinates
+        """
         # Let's assume y = 0
         # to find , we substitute
         y = 0
@@ -128,7 +132,7 @@ class Lines2D(object):
         points_vec = (self_point[0] - other_point[0], self_point[1] - other_point[1])
         points_vec = Vector(points_vec)
 
-        return points_vec.is_orthogonal(other.normal_vector)
+        return points_vec.is_orthogonal_to(other.normal_vector)
 
     def radians(self, vec2):
         """This method calculates the angle between two lines

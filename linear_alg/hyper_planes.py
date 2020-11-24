@@ -30,6 +30,12 @@ class HyperPlanes(object):
             assert type(i) in num, 'Coefficients  Must Be Numerical!'
 
     def __eq__(self, other):
+        """Assert if two hyperplanes have
+        equal coefficients and constant terms
+
+        :param other: A HyperPlane object
+        :return: True or false
+        """
         self_other_constants = self.constant_term == other.constant_term
         return self_other_constants and self.normal_vector.__eq__(other.normal_vector)
 
@@ -86,7 +92,7 @@ class HyperPlanes(object):
         points_vec = [i - j for i, j in zip(self_point, other_point)]
         points_vec = Vector(points_vec)
 
-        return points_vec.is_orthogonal(other.normal_vector)
+        return points_vec.is_orthogonal_to(other.normal_vector)
 
     @staticmethod
     def first_nonzero_index(iterable):

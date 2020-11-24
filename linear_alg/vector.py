@@ -212,7 +212,7 @@ class Vector(object):
 
         return degree
 
-    def is_parallel(self, vec2):
+    def is_parallel_to(self, vec2):
         """Check if one vector is a scalar multiple,
         of the other vector and vice versa
 
@@ -238,7 +238,7 @@ class Vector(object):
 
         return (is_180 + is_zero) == 1
 
-    def is_orthogonal(self, vec2):
+    def is_orthogonal_to(self, vec2):
         """Check if two vectors are orthogonal
 
         Two vectors are orthogonal if their dot-product is 0,
@@ -339,8 +339,8 @@ class Vector(object):
         cross_vec.coordinates[1] = -((x1 * z2) - (x2 * z1))
         cross_vec.coordinates[2] = (x1 * y2) - (x2 * y1)
         try:
-            assert self.is_orthogonal(cross_vec)
-            assert vec2.is_orthogonal(cross_vec)
+            assert self.is_orthogonal_to(cross_vec)
+            assert vec2.is_orthogonal_to(cross_vec)
         except AssertionError:
             return 'Cross-Vector must be orthogonal to both vectors!'
 
