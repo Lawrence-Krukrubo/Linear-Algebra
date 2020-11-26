@@ -134,6 +134,14 @@ class GaussianElimination(GeHelper):
         return ret
 
     def plot_lines(self):
+        """Plot lines2D objects in 2D or
+        Planes3D objects in 3D.
+
+        If there's an intersection, lines/planes
+        are plotted to show the intersection point.
+
+        :return: None (Plots lines/planes in 2D or 3D)
+        """
         slopes, intercepts = [], []
         intersect = self.unique_intersection()
 
@@ -173,6 +181,36 @@ class GaussianElimination(GeHelper):
 
         plt.grid(linestyle='dotted')
         plt.show()
+
+    @staticmethod
+    def plot_points(x=None, y=None, z=None):
+        """Plot a point in 2D or 3D
+
+        Example: GE.plot_points(2, 3) # 2D
+                GE.plot_points(2,3,4) # 3D
+
+        :param x: The x coordinate(Int or Float)
+        :param y: The y coordinate(Int or Float)
+        :param z: The z coordinate(Int or Float)
+        :return: None (Just plots the point)
+        """
+        assert x and y, 'Points must have at least 2 Coordinates'
+
+        title_dict = {'size': 14, 'weight': 'bold'}
+        label_dict = {'size': 12, 'weight': 'bold'}
+        if x and y and not z:
+            plt.style.use('seaborn-white')
+            plt.scatter(x, y)
+            plt.xlim(min(x, y) - 3, max(x, y) + 3)
+            plt.ylim(min(x, y) - 3, max(x, y) + 3)
+            plt.title(f'Point  (X={x}, Y={y})', fontdict=title_dict)
+            plt.xlabel('X', fontdict=label_dict)
+            plt.ylabel('Y', fontdict=label_dict, rotation=1.4)
+            plt.grid(linestyle='dotted')
+            plt.show()
+
+        else:
+            print('Z plotting will be done soon')
 
     def summary(self):
         """Give a Summary of the
