@@ -42,7 +42,7 @@ class Planes3D(object):
         of each other and their normal vectors
         have an angle of 0 or 180 degrees between them
 
-        :param other: A plane with same dim as self
+        :param vec2: A plane with same dim as self
         :return:
         """
         parallel_degrees = [0, 180]

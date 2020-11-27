@@ -183,11 +183,11 @@ class GaussianElimination(GeHelper):
         plt.show()
 
     @staticmethod
-    def plot_points(x=None, y=None, z=None):
+    def plot_point(x=None, y=None, z=None):
         """Plot a point in 2D or 3D
 
-        Example: GE.plot_points(2, 3) # 2D
-                GE.plot_points(2,3,4) # 3D
+        Example: GE.plot_point(2, 3) # 2D
+                GE.plot_point(2,3,4) # 3D
 
         :param x: The x coordinate(Int or Float)
         :param y: The y coordinate(Int or Float)
@@ -198,19 +198,28 @@ class GaussianElimination(GeHelper):
 
         title_dict = {'size': 14, 'weight': 'bold'}
         label_dict = {'size': 12, 'weight': 'bold'}
+        plt.style.use('seaborn-white')
+
         if x and y and not z:
-            plt.style.use('seaborn-white')
             plt.scatter(x, y)
             plt.xlim(min(x, y) - 3, max(x, y) + 3)
             plt.ylim(min(x, y) - 3, max(x, y) + 3)
-            plt.title(f'Point  (X={x}, Y={y})', fontdict=title_dict)
+            plt.title(f'Point in 2D: (X={x}, Y={y})', fontdict=title_dict)
             plt.xlabel('X', fontdict=label_dict)
             plt.ylabel('Y', fontdict=label_dict, rotation=1.4)
             plt.grid(linestyle='dotted')
-            plt.show()
 
         else:
-            print('Z plotting will be done soon')
+            fig = plt.figure(figsize=(10, 6))
+            ax = fig.add_subplot(111, projection='3d')
+
+            ax.scatter(x, y, z, c='r', marker='o')
+            ax.set_xlabel('X', fontdict=label_dict)
+            ax.set_ylabel('Y', fontdict=label_dict)
+            ax.set_zlabel('Z', fontdict=label_dict)
+            ax.set_title(f'Point in 3D: (X={x}, Y={y}, Z={z})', fontdict=title_dict)
+
+        plt.show()
 
     def summary(self):
         """Give a Summary of the
