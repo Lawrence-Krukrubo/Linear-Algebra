@@ -194,13 +194,13 @@ class GaussianElimination(GeHelper):
         :param z: The z coordinate(Int or Float)
         :return: None (Just plots the point)
         """
-        assert x and y, 'Points must have at least 2 Coordinates'
+        assert x is not None and y is not None, 'Points Must Have 2 or 3 Coordinates'
 
         title_dict = {'size': 14, 'weight': 'bold'}
         label_dict = {'size': 12, 'weight': 'bold'}
         plt.style.use('seaborn-white')
 
-        if x and y and not z:
+        if z is None:
             plt.scatter(x, y)
             plt.xlim(min(x, y) - 3, max(x, y) + 3)
             plt.ylim(min(x, y) - 3, max(x, y) + 3)

@@ -154,6 +154,9 @@ class Lines2D(object):
 
         return self.normal_vector.degrees(vec2.normal_vector)
 
+    def plot(self):
+        pass
+
 
 if __name__ == '__main__':
     one = Lines2D((4.046, 2.836), 1.21)

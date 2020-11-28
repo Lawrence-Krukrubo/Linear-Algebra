@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class Vector(object):
@@ -16,7 +17,7 @@ class Vector(object):
         try:
             if not coordinates:
                 raise ValueError
-            self.coordinates = list(coordinates)
+            self.coordinates = [round(i, 4) for i in coordinates]
             self.dimension = len(coordinates)
         except ValueError:
             raise ValueError('The coordinates must be nonempty')
@@ -83,7 +84,7 @@ class Vector(object):
 
         for i in range(len(self.coordinates)):
             self.coordinates[i] *= scalar
-            self.coordinates[i] = round(self.coordinates[i], 6)
+            self.coordinates[i] = round(self.coordinates[i], 4)
 
         return self
 
@@ -98,9 +99,9 @@ class Vector(object):
         dot_multiply = sum([i**2 for i in self.coordinates])
         magnitude = math.sqrt(dot_multiply)
 
-        return round(magnitude, 6)
+        return round(magnitude, 4)
 
-    def normalize(self):
+    def unit_vector(self):
         """Compute the unit vector.
 
         First, compute the vector magnitude then,
@@ -177,7 +178,7 @@ class Vector(object):
             new_list.append(vec_x[0] * vec_y[0])
             return new_list + dot_multiply(vec_x[1:], vec_y[1:])
 
-        dot_product = round(sum(dot_multiply(self.coordinates, vec2.coordinates)), 6)
+        dot_product = round(sum(dot_multiply(self.coordinates, vec2.coordinates)), 4)
 
         return dot_product
 
@@ -197,7 +198,7 @@ class Vector(object):
 
         dot_product = round(self.dot_product(vec2))
         magnitudes_multiply = round(self.magnitude() * vec2.magnitude())
-        theta = round(math.acos(dot_product / magnitudes_multiply), 6)
+        theta = round(math.acos(dot_product / magnitudes_multiply), 4)
         return theta
 
     def degrees(self, vec2):
@@ -208,7 +209,7 @@ class Vector(object):
         and multiply the radians value by (180/pi) to get degrees.
         """
         radian = self.radians(vec2)
-        degree = round(radian * (180 / math.pi), 6)
+        degree = round(radian * (180 / math.pi), 4)
 
         return degree
 
@@ -258,9 +259,9 @@ class Vector(object):
         return round(self.degrees(vec2)) == 90
 
     def v_parallel(self, vec2):
-        """Find the component of self parallel to
-        the basis vector vec2, given that self is
-        projected on vec2.
+        """Find the component of self (A Vector),
+         parallel to the basis vector vec2,
+         given that self is projected on vec2.
 
         To compute v_parallel, we multiply unit_vector vec2
         by the dot-product of (unit_vector vec2 and self)
@@ -275,7 +276,7 @@ class Vector(object):
         except AssertionError:
             return 'ERROR: Both dimensions must be equal!'
 
-        unit_vec2 = vec2.normalize()
+        unit_vec2 = vec2.unit_vector()
         self_dot_unit_vec2 = self.dot_product(unit_vec2)
         v_para = unit_vec2.scalar_multiply(self_dot_unit_vec2)
 
@@ -361,7 +362,7 @@ class Vector(object):
         cross_vector = self.cross_product(vec2)
         parallelogram_area = cross_vector.magnitude()
 
-        return round(parallelogram_area, 6)
+        return round(parallelogram_area, 4)
 
     def area_of_triangle(self, vec2):
         """Return the area of the triangle
@@ -379,4 +380,46 @@ class Vector(object):
         area_of_parallelogram = cross_vector.magnitude()
         triangle_area = area_of_parallelogram / 2.
 
-        return round(triangle_area, 6)
+        return round(triangle_area, 4)
+
+    def plot(self):
+        """Plot a vector in
+            2D or 3D
+
+        :return: None
+        """
+        assert 2 <= self.dimension <= 3, 'ERROR: Dimension Can Only be 2D or 3D'
+
+        ax = plt.axes()
+        sample = np.round(np.random.uniform(low=-5, high=5, size=(self.dimension,)))
+        x = [round(i, 1) for i in self.coordinates]
+        title_dict = {'size': 14, 'weight': 'bold'}
+        label_dict = {'size': 12, 'weight': 'bold'}
+        plt.style.use('seaborn-white')
+
+        if self.dimension == 2:
+            ax.arrow(sample[0], sample[1], x[0], x[1],
+                     head_width=0.4, head_length=0.5, fc='red', ec='black')
+            plt.grid()
+            if x[1] < 0 <= x[0]:
+                plt.xlim(sample[0]-1, sample[0]+x[0]+1)
+                plt.ylim((sample[1]+x[1])-1, sample[1]+1)
+                plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] + 0.15), fontweight='bold')
+            elif x[1] >= 0 <= x[0]:
+                plt.xlim(sample[0]-1, sample[0]+x[0]+1)
+                plt.ylim(sample[1]-1, sample[1]+x[1]+1)
+                plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] - 0.15), fontweight='bold')
+            elif x[0] < 0 <= x[1]:
+                plt.xlim((sample[0]+x[0])-1, sample[0]+1)
+                plt.ylim(sample[1]-1, (sample[1]+x[1])+1)
+                plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] + 0.15), fontweight='bold')
+            else:
+                plt.xlim((sample[0]+x[0])-1, sample[0]+1)
+                plt.ylim((sample[1]+x[1])-1, sample[1]+1)
+                plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] - 0.15), fontweight='bold')
+
+            plt.title(f'Vector({x[0]},{x[1]}): X= {x[0]}, Y= {x[1]}', fontdict=title_dict)
+            plt.xlabel('X', fontdict=label_dict)
+            plt.ylabel('Y', fontdict=label_dict, rotation=1.4)
+
+        plt.show()
