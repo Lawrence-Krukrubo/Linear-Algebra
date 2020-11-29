@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from copy import deepcopy
 import string
+from .vector import Vector
 
 
 class GaussianElimination(GeHelper):
@@ -218,6 +219,74 @@ class GaussianElimination(GeHelper):
             ax.set_ylabel('Y', fontdict=label_dict)
             ax.set_zlabel('Z', fontdict=label_dict)
             ax.set_title(f'Point in 3D: (X={x}, Y={y}, Z={z})', fontdict=title_dict)
+
+        plt.show()
+
+    @staticmethod
+    def plot_points_2_vec(point1, point2):
+        """Given two Points in 2D or 3D,
+        plot a Vector from the 1st point
+        to the 2nd point
+
+            For Example in 2D:
+                    point1 = (1, 2)
+                    point2 = (3, 4)
+                    GE.plot_points_2_vec(point1, point2)
+
+            For Example in 3D:
+                    point1 = (1, 2, 3)
+                    point2 = (3, 4, 5)
+                    GE.plot_points_2_vec(point1, point2)
+
+        :param point1: A tuple/triple of Int or Float
+        :param point2: A tuple/triple of Int or Float
+        :return: None (Plots the vector connecting the points)
+        """
+        assert 2 <= len(point1) == len(point2) <= 3, "Dimensions must be 2 or 3 and Equal!"
+
+        sample = [round(i, 1) for i in point1]
+        temp = [round(i, 1) for i in point2]
+        head_length = 0.5
+        x = [j - k for j, k in zip(temp, sample)]
+
+        x_mag = Vector(x).magnitude()
+        dx, dy = [i/x_mag for i in x]
+        x_mag = x_mag - head_length
+
+        ax = plt.axes()
+        title_dict = {'size': 14.5, 'weight': 'bold'}
+        label_dict = {'size': 12.5, 'weight': 'bold'}
+        plt.style.use('seaborn-white')
+
+        if len(sample) == 2:
+            ax.arrow(sample[0], sample[1], dx*x_mag, dy*x_mag,
+                     head_width=0.4, head_length=head_length, fc='red', ec='black')
+            plt.grid()
+            if x[1] < 0 <= x[0]:
+                plt.xlim(sample[0] - 1, sample[0] + x[0] + 1)
+                plt.ylim((sample[1] + x[1]) - 1, sample[1] + 1)
+                plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] + 0.15), fontweight='bold')
+                plt.annotate(f'({temp[0]}, {temp[1]})', (temp[0], temp[1] - 0.25), fontweight='bold')
+            elif x[1] >= 0 <= x[0]:
+                plt.xlim(sample[0] - 1, sample[0] + x[0] + 1)
+                plt.ylim(sample[1] - 1, sample[1] + x[1] + 1)
+                plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] - 0.15), fontweight='bold')
+                plt.annotate(f'({temp[0]}, {temp[1]})', (temp[0], temp[1] + 0.15), fontweight='bold')
+            elif x[0] < 0 <= x[1]:
+                plt.xlim((sample[0] + x[0]) - 1, sample[0] + 1)
+                plt.ylim(sample[1] - 1, (sample[1] + x[1]) + 1)
+                plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] + 0.15), fontweight='bold')
+                plt.annotate(f'({temp[0]}, {temp[1]})', (temp[0], temp[1] + 0.15), fontweight='bold')
+            else:
+                plt.xlim((sample[0] + x[0]) - 1, sample[0] + 1)
+                plt.ylim((sample[1] + x[1]) - 1, sample[1] + 1)
+                plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] - 0.15), fontweight='bold')
+                plt.annotate(f'({temp[0]}, {temp[1]})', (temp[0], temp[1] - 0.25), fontweight='bold')
+
+            plt.scatter([point1[0], point2[0]], [point1[1], point2[1]], color='black')
+            plt.title(f'Vector({x[0]},{x[1]}): X= {x[0]}, Y= {x[1]}', fontdict=title_dict)
+            plt.xlabel('X', fontdict=label_dict)
+            plt.ylabel('Y', fontdict=label_dict, rotation=1.4)
 
         plt.show()
 
