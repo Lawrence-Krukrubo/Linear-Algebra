@@ -184,6 +184,97 @@ class GaussianElimination(GeHelper):
         plt.show()
 
     @staticmethod
+    def manhattan_distance(point1, point2):
+        """Find the Manhattan distance between two points
+
+        point1 and point2 must be in same dimension and
+        each must be a tuple or a list.
+
+        Example:
+            import GaussianElimination as GE...
+
+            # For 2D
+            point1 = (1,2)
+            point2 = (3,4)
+            GE.manhattan_distance(point1, point2)
+
+            # For 3 and higher D
+            point1 = (1, 2, 3)
+            point2 = (4, 5,6)
+            GE.manhattan_distance(point1, point2)
+
+        :param point1: A list or tuple of ints or floats
+        :param point2: A list or tuple of ints or floats
+        :return: An int or float of manhattan distance
+        """
+        # Assert both points have same dimension
+        # And both points are of type tuple or list
+        count = 1
+        try:
+            assert type(point1) and type(point2) in [tuple, list]
+            count += 1
+            assert len(point1) == len(point2)
+        except AssertionError:
+            if count == 1:
+                return 'ERROR: point1 and point2 must be a tuple or list'
+            else:
+                return 'ERROR: point1 and point2 Must have Same Dimension'
+
+        distance_ = 0
+
+        for coord1, coord2 in zip(point1, point2):
+            distance_ += abs(coord1 - coord2)
+
+        return round(distance_, 4)
+
+    @staticmethod
+    def euclidean_distance(point1, point2):
+        """Find the Euclidean distance between two points
+
+                point1 and point2 must be in same dimension and
+                each must be a tuple or a list.
+
+                Example:
+                    import GaussianElimination as GE...
+
+                    # For 2D
+                    point1 = (1,2)
+                    point2 = (3,4)
+                    GE.euclidean_distance(point1, point2)
+
+                    # For 3 and higher D
+                    point1 = (1, 2, 3)
+                    point2 = (4, 5,6)
+                    GE.euclidean_distance(point1, point2)
+
+                :param point1: A list or tuple of ints or floats
+                :param point2: A list or tuple of ints or floats
+                :return: An int or float of euclidean distance
+                """
+        # Assert both points have same dimension
+        # And both points are of type tuple or list
+        count = 1
+        try:
+            assert type(point1) and type(point2) in [tuple, list]
+            count += 1
+            assert len(point1) == len(point2)
+        except AssertionError:
+            if count == 1:
+                return 'ERROR: point1 and point2 must be a Tuple or List'
+            else:
+                return 'ERROR: point1 and point2 Must have Same Dimension'
+
+        distance_ = 0
+
+        for coord1, coord2 in zip(point1, point2):
+            dist_squ = pow(coord1-coord2, 2)
+            distance_ += dist_squ
+
+        distance_ = pow(distance_, 0.5)
+
+        return round(distance_, 4)
+
+    @staticmethod
     def plot_point(x=None, y=None, z=None):
         """Plot a point in 2D or 3D
 
@@ -316,6 +407,7 @@ class GaussianElimination(GeHelper):
             # For infinite Intersections
             else:
                 return self.Infinite_Solution
+
 
 # if __name__ == '__main__':
 #     # CODING GE-SOLUTION
