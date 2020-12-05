@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 
 
 class Vector(object):
-    """ Class for creating and manipulating vector objects."""
+    """ Class for creating and manipulating vector objects,
+        exploring vector properties and attributes."""
 
     def __init__(self, coordinates):
         """ Initialise the Vector Class
@@ -38,8 +39,23 @@ class Vector(object):
     def add(self, *args):
         """ Add arbitrary number of vectors
 
-        @:param: args must be vectors of equal dimensions
-        @:return: a vector of sum of all coordinates
+        Vector addition is commutative and element-wise
+        addition of corresponding coordinates
+
+        For Example:
+        vec1 = Vector([1,2])
+        vec2 = Vector([3,4])
+        vec3 = Vector([5,6])
+
+        vec1.add(vec2)
+        >> Vector([4,6])
+
+        vec1.add([vec2, vec3])
+        >> Vector([9,12])
+
+        @:param: args must be a vector object or a list of
+                vectors, each of equal dimension.
+        @:return: a vector from sum of all coordinates
         """
         try:
             for i in args:
@@ -56,8 +72,22 @@ class Vector(object):
     def minus(self, *args):
         """ Minus arbitrary number of vectors
 
+        Vector subtraction is non-commutative and
+        element-wise subtraction of corresponding coordinates
+
+        For Example:
+        vec1 = Vector([1,2])
+        vec2 = Vector([3,4])
+        vec3 = Vector([5,6])
+
+        vec1.minus(vec2)
+        >> Vector([-2,-2])
+
+        vec1.minus([vec2, vec3])
+        >> Vector([-7,-8])
+
         @:param: args must be vectors of equal dimensions
-        @:return: a vector of subtraction of all coordinates
+        @:return: a vector from subtraction of all coordinates
         """
         try:
             for i in args:
@@ -78,8 +108,16 @@ class Vector(object):
         causes the vector to point in the opposite direction,
         as well as possibly changing its' magnitude.
 
+        For Example:
+                    vec1 = Vector([1,2, 3])
+                    scalar = 4
+
+                    vec1.scalar_multiply(4)
+                    >>Vector([4, 8, 12])
+
         :param: scalar must be an int or float, pos or neg.
-        :return: self.coordinates times scalar
+        :return: Vector with coordinates multiplied by scalar,
+                each coordinate rounded off to 4 D.P.
         """
 
         for i in range(len(self.coordinates)):
@@ -94,6 +132,11 @@ class Vector(object):
         The magnitude of a vector is the square root of,
         calling the dot-product on itself.
 
+        Usage Example:
+                    vec1 = Vector([2,3])
+                    vec1.magnitude()
+                    >> <Some-Numeric-Value>
+
         :return: Returns a scalar of type int or float
         """
         dot_multiply = sum([i**2 for i in self.coordinates])
@@ -104,8 +147,16 @@ class Vector(object):
     def unit_vector(self):
         """Compute the unit vector.
 
-        First, compute the vector magnitude then,
-        multiply the inverse magnitude by the vector.
+        To compute the unit vector,
+        First, compute the vector magnitude,then
+        multiply the inverse of the magnitude
+        by the vector.
+        This method does all that for you.
+
+        Usage Example:
+                    vec1 = Vector([2,3])
+                    vec1.unit_vector()
+                    >> <Some-Vector>
 
         :return: Return the unit vector
         """
@@ -119,27 +170,52 @@ class Vector(object):
         else:
             return 0
 
-    def is_zero_vector(self, vec2, tolerance=1e-7):
-        """Check if either vector is a zero-vector
+    def is_zero_vector(self, vec2=None, tolerance=1e-7):
+        """Check if a vector is a zero-vector.
+            If called on a vector and given another
+            vector as parameter, the method checks if
+            either of the 2 vectors is the zero vector.
 
         The zero-vector is a vector that has a
         magnitude of zero. It is both parallel and
         orthogonal to itself and all other vectors.
 
+        For example, if 3 vectors exist:
+            vec1 = Vector([2,3])
+            vec2 = Vector([0,0])
+            vec3 = Vector([5,0])
+
+            vec1.is_zero_vector()
+            >> False
+
+            vec1.is_zero_vector(vec2)
+            >>True
+
+            vec1.is_zero_vector(vec3)
+            >>False
+
         :param vec2: a vector with same dimension as self
         :param tolerance: A minute floating limit to accommodate
-                        small floating point differences
+                        small floating point differences for zero.
+                        default tolerance=1e-7.
+
+                        if you want to set a custom tolerance,
+                        simply pass it in the function call like:-
+                        tolerance = <Your Specific Tolerance>
+
         :return: True or false
         """
-        try:
-            assert self._has_equal_dim(vec2)
-        except AssertionError as e:
-            return e
+        if vec2:
+            try:
+                assert self._has_equal_dim(vec2)
+            except AssertionError as e:
+                return e
+            return abs(self.magnitude()) < tolerance or abs(vec2.magnitude()) < tolerance
 
-        return abs(self.magnitude()) < tolerance or abs(vec2.magnitude()) < tolerance
+        return abs(self.magnitude()) < tolerance
 
     def _has_equal_dim(self, vec2):
-        """Asserts two vectors have same dimension
+        """Asserts two vectors have equal dimensions
 
         :param vec2: A vector that should have same dim as self
         :return: returns True or False
@@ -148,10 +224,17 @@ class Vector(object):
         return self.dimension == vec2.dimension
 
     def dot_product(self, vec2):
-        """This method returns the dot-product between 2 vectors.
+        """This method returns the dot-product of two vectors.
 
         The dot-product is the sum of element-wise multiplication
-        on both vectors. It's a number
+        of both vectors. It's commutative and returns a number.
+
+        Usage Example:
+                    vec1 = Vector([2,3])
+                    vec2 = Vector([3,4])
+
+                    vec1.dot_product(vec2)
+                    >> (2*3) + (3*4) = 18
 
         @:param: vec2 is a vector of equal dimension with self
         @:return: A float or int
@@ -184,10 +267,20 @@ class Vector(object):
 
     def radians(self, vec2):
         """This method calculates the angle between two vectors
-                in radians and returns a float.
+                in radians.
 
         The angle is the arc-cosine of the dot-product of the two,
         vectors, divided by the product of their magnitudes.
+
+        Usage Example:
+                    vec1 = Vector([2,3])
+                    vec2 = Vector([3,4])
+
+                    vec1.radians(vec2)
+                    >> <Some-Numeric-Value>
+
+        @:param vec2: A vector object with same dimension as self
+        @:return: an Int or Float (the angle in radians)
         """
         try:
             if self.is_zero_vector(vec2):
@@ -199,14 +292,25 @@ class Vector(object):
         dot_product = round(self.dot_product(vec2))
         magnitudes_multiply = round(self.magnitude() * vec2.magnitude())
         theta = round(math.acos(dot_product / magnitudes_multiply), 4)
+
         return theta
 
     def degrees(self, vec2):
-        """This method calculates the angle between two vectors
-            in degrees and returns a float.
+        """This method calculates the angle between
+            two vectors in degrees.
 
-        Simply call the radians method on the vectors
-        and multiply the radians value by (180/pi) to get degrees.
+        It simply calls the radians method on the vectors
+        and multiplies the radians value by (180/pi) to get degrees.
+
+        Usage Example:
+                    vec1 = Vector([1,2])
+                    vec2 = Vector([3,4])
+
+                    vec1.degrees(vec2)
+                    >> <Some-Numeric-Value>
+
+        @:param vec2: A vector object with same dimension as self
+        @:return: an Int or Float (the angle in degrees)
         """
         radian = self.radians(vec2)
         degree = round(radian * (180 / math.pi), 4)
@@ -221,8 +325,19 @@ class Vector(object):
         multiple of the other. If the scalar is
         a negative number, then both vectors will be
         opposite and have angle of 180 degrees between.
-        else, both vectors will have angle of 0 degrees
+        Else, both vectors will have angle of 0 degrees
         as they point in the same direction.
+
+        Usage Example:
+                    vec1 = Vector([1,2])
+                    vec2 = Vector([2,4])
+                    vec3 = Vector([0,5])
+
+                    vec1.is_parallel_to(vec2)
+                    >> True
+
+                    vec1.is_parallel_to(vec3)
+                    >> False
 
         :param vec2: A vector of same dimension as self
         :return: Return a boolean True or False
@@ -242,9 +357,20 @@ class Vector(object):
     def is_orthogonal_to(self, vec2):
         """Check if two vectors are orthogonal
 
-        Two vectors are orthogonal if their dot-product is 0,
-        this usually happens if one is a zero-vector or they are at
+        Two vectors are orthogonal if their dot-product is 0.
+        This usually happens if one is a zero-vector or they are at
         right angles to each other
+
+        Usage Example:
+                    vec1 = Vector([1,2])
+                    vec2 = Vector([2,4])
+                    vec3 = Vector([0,0])
+
+                    vec1.is_orthogonal_to(vec2)
+                    >> False
+
+                    vec1.is_orthogonal_to(vec3)
+                    >> True
 
         :param vec2: Vector with same dimension as self
         :return: True or False
@@ -259,12 +385,20 @@ class Vector(object):
         return round(self.degrees(vec2)) == 90
 
     def v_parallel(self, vec2):
-        """Find the component of self (A Vector),
-         parallel to the basis vector vec2,
+        """Find the component of vector self,
+         parallel to the basis vector(vec2),
          given that self is projected on vec2.
 
-        To compute v_parallel, we multiply unit_vector vec2
-        by the dot-product of (unit_vector vec2 and self)
+        To compute v_parallel, we multiply the unit_vector
+        of vec2(basis vector), by the dot-product
+        of the unit_vector of vec2 and self
+
+        Usage Example:
+                    vec1 = Vector([1,2])
+                    vec2 = Vector([2,4])
+
+                    vec1.v_parallel(vec2)
+                    >> <Some-Vector>
 
         :param vec2: A vector with same dimension as self
         :return: A vector (v_parallel)
@@ -283,13 +417,20 @@ class Vector(object):
         return v_para
 
     def v_perp(self, vec2):
-        """ Find the component of self orthogonal to
-        vec2, given that self is projected on vec2
+        """ Find the component of vector self orthogonal
+        to vec2, given that self is projected on vec2
 
         Any non-zero vector can be represented as the
         sum of its component orthogonal/perpendicular
-        to the basis vector and its component
+        to the basis vector(vec2) and its component
         parallel to the basis vector
+
+        Usage Example:
+                    vec1 = Vector([1,2])
+                    vec2 = Vector([2,4])
+
+                    vec1.v_perp(vec2)
+                    >> <Some-Vector>
 
         :param vec2: Vector with same dimension as self
         :return: Vector (v_perp)
@@ -312,8 +453,15 @@ class Vector(object):
         The cross product is non-commutative.
         It is only applicable to vectors in 3 dimensions
         and is useful for computing the area of the parallelogram
-        spanned by these 2 vectors. Cross product must be orthogonal
-        to both vectors. Orthogonality assertion is included here.
+        spanned by these 2 vectors. Cross product returns a vector,
+        which must be orthogonal to both vectors.
+
+        Usage Example:
+                    vec1 = Vector([1,2,3])
+                    vec2 = Vector([2,4,5])
+
+                    vec1.cross_product(vec2)
+                    >> <Some-Vector>
 
         :param vec2: vector with 3 dimension equal to self
                     if dim < 3, append dim of 0.
@@ -354,9 +502,18 @@ class Vector(object):
         The area of the parallelogram spanned by
         two vectors is simply the magnitude of
         the cross-product of these two vectors.
+        Both vectors must be <= 3D.
+
+        Usage Example:
+                    vec1 = Vector([1,2,3])
+                    vec2 = Vector([2,4,5])
+
+                    vec1.area_of_parallelogram(vec2)
+                    >> <Some-Numerical-Value>
 
         :param vec2: vector of no more than 3 dimension
-                    same as self.
+                    same as self. If either is less than
+                    3D, zero-padding is done.
         :return: A number (magnitude of cross-product)
         """
         cross_vector = self.cross_product(vec2)
@@ -369,11 +526,20 @@ class Vector(object):
         spanned by two vectors
 
         The area of the triangle spanned by
-        two vectors is simply the cross product
-        of these two vectors, divided by 2.
+        two vectors is simply the magnitude of
+        the cross product of these two vectors,
+        divided by 2. Both vectors must be <= 3D.
+
+        Usage Example:
+                    vec1 = Vector([1,2,3])
+                    vec2 = Vector([2,4,5])
+
+                    vec1.area_of_triangle(vec2)
+                    >> <Some-Numerical-Value>
 
         :param vec2: vector of no more than 3 dimension
-                    same as self.
+                    same as self. If either vector is less
+                    than 3D, zero padding is done.
         :return: A number (area of triangle of 2 vectors)
         """
         cross_vector = self.cross_product(vec2)
@@ -386,7 +552,7 @@ class Vector(object):
         """Plot a vector in
             2D or 3D
 
-        :return: None
+        :return: None (just plots the vector)
         """
         assert 2 <= self.dimension <= 3, 'ERROR: Dimension Can Only be 2D or 3D'
 
