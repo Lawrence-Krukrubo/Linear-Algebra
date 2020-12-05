@@ -275,18 +275,26 @@ class GaussianElimination(GeHelper):
         return round(distance_, 4)
 
     @staticmethod
-    def plot_point(x=None, y=None, z=None):
+    def plot_point(points):
         """Plot a point in 2D or 3D
 
-        Example: GE.plot_point(2, 3) # 2D
-                GE.plot_point(2,3,4) # 3D
+        Example:
+                point1 = (2, 3)  # 2D
+                GE.plot_point(point1)
 
-        :param x: The x coordinate(Int or Float)
-        :param y: The y coordinate(Int or Float)
-        :param z: The z coordinate(Int or Float)
+                point2 = (2, 3, 4)  # 3D
+                GE.plot_point(point2)
+
+        :param points: A tuple or triple of Ints or Floats
         :return: None (Just plots the point)
         """
-        assert x is not None and y is not None, 'Points Must Have 2 or 3 Coordinates'
+        x, y, z = None, None, None
+        assert 2 <= len(points) <= 3, 'Points Must Have 2 or 3 Coordinates'
+
+        if len(points) < 3:
+            x, y = points
+        else:
+            x, y, z = points
 
         title_dict = {'size': 14, 'weight': 'bold'}
         label_dict = {'size': 12, 'weight': 'bold'}

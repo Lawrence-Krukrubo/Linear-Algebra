@@ -180,10 +180,9 @@ class Vector(object):
         magnitude of zero. It is both parallel and
         orthogonal to itself and all other vectors.
 
-        For example, if 3 vectors exist:
+        For example, if 2 vectors exist:
             vec1 = Vector([2,3])
             vec2 = Vector([0,0])
-            vec3 = Vector([5,0])
 
             vec1.is_zero_vector()
             >> False
@@ -191,8 +190,8 @@ class Vector(object):
             vec1.is_zero_vector(vec2)
             >>True
 
-            vec1.is_zero_vector(vec3)
-            >>False
+            vec2.is_zero_vector()
+            >>True
 
         :param vec2: a vector with same dimension as self
         :param tolerance: A minute floating limit to accommodate
@@ -203,7 +202,7 @@ class Vector(object):
                         simply pass it in the function call like:-
                         tolerance = <Your Specific Tolerance>
 
-        :return: True or false
+        :return: True or False
         """
         if vec2:
             try:
