@@ -1,13 +1,13 @@
 from .vector import Vector
 from .decimal_ import MyDecimal
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class Lines2D(object):
-    """A class for finding Intersections,
-          Coefficients, and other properties
-          for lines in 2-Dimensions.
-    """
+    """ Class for creating and manipulating 2D line objects,
+        exploring their properties and attributes."""
+
     X, Y = None, None
 
     def __init__(self, coefficients, constant_term):
@@ -24,11 +24,25 @@ class Lines2D(object):
 
     def is_parallel_to(self, other):
         """Confirm if two lines are parallel
+
         Two lines are parallel if the coefficients
         of one line is a scalar multiple of the
-        other line, irrespective of absolute value
-        :param other: A line with
-        :return:
+        other line, irrespective of absolute values.
+
+        Usage Example:
+                    equation1 = 2x + 3y = 2
+                    equation2 = 3x + 2y = 5
+
+                    represent both equations as
+                    Lines2D objects...
+                    line1 = Lines2D((2, 3), 2)
+                    line2 = Lines2D((3, 2), 5)
+
+                    line1.is_parallel_to(line2)
+                    >> False
+
+        :param other: A line in 2D, same as self.
+        :return: True or False
         """
         assert self.dimension == other.dimension, 'Dimensions Must Be Equal!'
 
@@ -48,11 +62,23 @@ class Lines2D(object):
     def dir_vec(self):
         """Given a line, find it's
             direction vector
+
             The direction vector in 2D
             can be got by reversing the
             coefficients of a line and
-            negating one
-        :return: a tuple, the direction vector
+            negating one.
+
+            Usage Example:
+                    equation1 = 2x + 3y = 2
+
+                    represent the equation as
+                    a Lines2D object...
+                    line1 = Lines2D((2, 3), 2)
+
+                    line1.dir_vec()
+                    >> Vector([3, -2])
+
+        :return: a Vector object, the direction vector
         """
 
         # First assert i`t's not the zero-vector
@@ -70,12 +96,14 @@ class Lines2D(object):
 
         return None
 
-    def find_point(self):
+    def find_y_intercept(self):
         """Given a line in 2D
-            find any given point.
-            Specifically, find the value
-            of y, if x is 0. (y-intercept)
-        :return: a Tuple of x,y coordinates
+            find the y-intercept
+
+            Find the value of y,
+            when x is 0 (y-intercept).
+
+        :return: a Tuple of x,y (Int or Float) coordinates
         """
         # Let's assume x = 0
         # to find y, we substitute
@@ -83,11 +111,13 @@ class Lines2D(object):
         y = round(self.constant_term / self.coefficients[-1], 3)
         return x, y
 
-    def find_point2(self):
+    def find_x_intercept(self):
         """Given a line in 2D
-            find any given point.
-            Specifically, find the value
-            of x, if y is 0. (x-intercept)
+            find the x-intercept.
+
+            Find the value of x,
+            when y is 0 (x-intercept).
+
         :return: a Tuple of x,y coordinates
         """
         # Let's assume y = 0
@@ -98,12 +128,26 @@ class Lines2D(object):
 
     def find_slope_and_intercept(self):
         """Find the slope and intercept of
-            a linear equation
+            a line in 2D
 
-        :return:
+            The slope is simply the rise over
+            the run. (y1-y2 / x1-x2)
+
+            Usage Example:
+                    equation1 = 2x + 3y = 2
+
+                    represent the equation as
+                    a Lines2D object...
+                    line1 = Lines2D((2, 3), 2)
+
+                    line1.find_slope_and_intercept()
+                    >> <slope, intercept>
+
+        :return: Return a Tuple of slope and intercept
+                these must be Ints or Floats.
         """
-        point1 = self.find_point()
-        point2 = self.find_point2()
+        point1 = self.find_y_intercept()
+        point2 = self.find_x_intercept()
 
         slope = round((point1[-1] - point2[-1]) / (point1[0] - point2[0]), 4)
         intercept = round(point1[-1], 4)
@@ -113,10 +157,24 @@ class Lines2D(object):
     def is_equal_to(self, other):
         """Assert that two parallel lines
             are equal and the same
+
         Two parallel lines in 2D are equal/same if
         The direction vector of one line
-        is orthogonal to the normal vector of the
-        other line.
+        is orthogonal to the normal vectors
+        of both lines.
+
+        Usage Example:
+                    equation1 = 2x + 3y = 2
+                    equation2 = 3x + 2y = 5
+
+                    represent both equations as
+                    Lines2D objects...
+                    line1 = Lines2D((2, 3), 2)
+                    line2 = Lines2D((3, 2), 5)
+
+                    line1.is_equal_to(line2)
+                    >> False
+
         :param other: a line with same dim as self
         :return: True or False
         """
@@ -125,8 +183,8 @@ class Lines2D(object):
         except AssertionError:
             return False
         # find one point on self and other
-        self_point = self.find_point()
-        other_point = other.find_point()
+        self_point = self.find_y_intercept()
+        other_point = other.find_y_intercept()
 
         # find the vector between those points
         points_vec = (self_point[0] - other_point[0], self_point[1] - other_point[1])
@@ -155,7 +213,37 @@ class Lines2D(object):
         return self.normal_vector.degrees(vec2.normal_vector)
 
     def plot(self):
-        pass
+        """Plot a line in 2D,
+
+        Method is called on a Lines2D object.
+
+        Usage Example:
+                    equation1 = 2x + 3y = 2
+
+                    represent equation1 as
+                    Lines2D objects...
+                    line1 = Lines2D((2, 3), 2)
+
+                    line1.plot()
+
+        :return: None (just plots the line in 2D)
+        """
+        slope, intercept = self.find_slope_and_intercept()
+        slopes, intercepts = [], []
+        slopes.append(slope)
+        intercepts.append(intercept)
+
+        X, Y, const = self.coefficients[0], self.coefficients[1], self.constant_term
+        x = np.linspace(-5, 5, 500)
+
+        for slope, intercept in zip(list(slopes), list(intercepts)):
+            plt.plot(x, x * slope + intercept, '-r')
+        plt.title(f'Linear Equation: {X}x {+Y}y = {const}', fontsize=14)
+        plt.xlabel('X', fontsize=12)
+        plt.ylabel('Y', fontsize=12, rotation=1.4)
+
+        plt.grid(linestyle='dotted')
+        plt.show()
 
 
 if __name__ == '__main__':

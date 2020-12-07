@@ -83,7 +83,7 @@ class Planes3D(object):
             return False
         # find one point on self and other
         self_point = self.find_point()
-        other_point = other.find_point()
+        other_point = other.find_y_intercept()
 
         self_, other_ = self.coefficients, other.coefficients
 

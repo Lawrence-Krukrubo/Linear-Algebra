@@ -152,7 +152,7 @@ class GaussianElimination(GeHelper):
 
         x = np.linspace(-10, 10, 500)
 
-        v1, v2, k = -5, 5, 0
+        v1, v2 = -5, 5
 
         if type(intersect) is tuple:
             kmin = min(intersect)

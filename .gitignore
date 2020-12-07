@@ -1,3 +1,6 @@
 .idea/linear_algebra.iml
 .idea/misc.xml
 .idea/
+.ipynb_checkpoints/linear_algebra_refresher-checkpoint.ipynb
+linear_alg/__pycache__/gaussian_elimination.cpython-37.pyc
+linear_alg/__pycache__/vector.cpython-37.pyc

@@ -86,7 +86,7 @@ class HyperPlanes(object):
             return False
         # find one point on self and other
         self_point = self.find_point()
-        other_point = other.find_point()
+        other_point = other.find_y_intercept()
 
         # find the vector between those points
         points_vec = [i - j for i, j in zip(self_point, other_point)]
