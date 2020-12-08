@@ -67,7 +67,20 @@ class Planes3D(object):
             Specifically, find the value of z,
             when x and y are zero.
 
-        :return: a Tuple of x,y,z coordinates
+            Usage Example:
+                    equation1 = 2x + 3y + 4z = 8
+
+                    represent equation1 as a
+                    Planes3D object...
+                    plane1 = Planes3D((2, 3, 4), 8)
+
+                    plane1.find_point()
+                    >> (0, 0, 2)
+
+                    The method assumes x==y==0
+                    Therefore z = 8/4 = 2
+
+        :return: a Triple of x,y,z coordinates
         """
         # Let's assume x and y == 0
         # to find z, we substitute
@@ -82,9 +95,21 @@ class Planes3D(object):
             are equal and the same
 
         Two parallel planes in 3D are equal/same,
-        if the vector from any point in one plane
+        if the direction vector from any point in a plane
         to any point in the other plane is orthogonal
         to the normal vectors of either planes.
+
+        Usage Example:
+                    equation1 = 2x + 3y + 4z = 5
+                    equation2 = 3x + 2y - 6z = 9
+
+                    represent both equations as
+                    Planes3D objects...
+                    plane1 = Planes3D((2, 3, 4), 5)
+                    plane2 = Planes3D((3, 2, -6), 9)
+
+                    plane1.is_equal_to(plane2)
+                    >> False
 
         :param other: a plane with same dim as self
         :return: True or False
@@ -95,7 +120,7 @@ class Planes3D(object):
             return False
         # find one point on self and other
         self_point = self.find_point()
-        other_point = other.find_y_intercept()
+        other_point = other.find_point()
 
         self_, other_ = self.coefficients, other.coefficients
 
@@ -110,7 +135,7 @@ class Planes3D(object):
         # Return that cross_vec is the same as the vector
         # connecting these two points, which should be
         # The same as the zero vector given that both vectors,
-        # self and other, are parallel.
+        # self and other, are same and parallel.
 
         return points_vec.__eq__(cross_vec)
 
@@ -136,6 +161,13 @@ class Planes3D(object):
 
     @staticmethod
     def first_nonzero_index(iterable):
+        """This method takes an iterable
+            and finds the index of the
+            first non-zero element
+
+        :param iterable: Any iterable object in Python
+        :return: Int (index of first non-zero element)
+        """
         for k, item in enumerate(iterable):
             if not MyDecimal(item).is_near_zero():
                 return k
