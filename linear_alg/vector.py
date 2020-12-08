@@ -450,10 +450,16 @@ class Vector(object):
         """Find the cross-product of self and vec2
 
         The cross product is non-commutative.
-        It is only applicable to vectors in 3 dimensions
-        and is useful for computing the area of the parallelogram
-        spanned by these 2 vectors. Cross product returns a vector,
+        Both vectors must be <= 3 dimensions.
+        cross_product is useful for computing
+        the area of the parallelogram spanned by
+        these 2 vectors.
+        Cross product returns a vector,
         which must be orthogonal to both vectors.
+
+        Ideally, both vectors should be 3D, but
+        If either vector dimension is less than
+        3D, zero-padding is appended.
 
         Usage Example:
                     vec1 = Vector([1,2,3])
@@ -503,6 +509,10 @@ class Vector(object):
         the cross-product of these two vectors.
         Both vectors must be <= 3D.
 
+        Ideally, both vectors should be 3D, but
+        If either vector dimension is less than
+        3D, zero-padding is appended.
+
         Usage Example:
                     vec1 = Vector([1,2,3])
                     vec2 = Vector([2,4,5])
@@ -528,6 +538,10 @@ class Vector(object):
         two vectors is simply the magnitude of
         the cross product of these two vectors,
         divided by 2. Both vectors must be <= 3D.
+
+        Ideally, both vectors should be 3D, but
+        If either vector dimension is less than
+        3D, zero-padding is appended.
 
         Usage Example:
                     vec1 = Vector([1,2,3])
