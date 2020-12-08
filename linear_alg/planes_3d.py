@@ -4,9 +4,9 @@ import numpy as np
 
 
 class Planes3D(object):
-    """A class for finding Intersections,
-          Coefficients, and other properties
-          for planes in 3-Dimensions.
+    """A class for creating and exploring Planes in 3D,
+    finding Intersections, Coefficients, and other properties
+    for planes in 3-Dimensions.
     """
     X, Y, Z = None, None, None
     NO_NONZERO_ELTS_FOUND_MSG = 'No Non-zero elements found!'
@@ -41,6 +41,18 @@ class Planes3D(object):
         their normal vectors are scalar multiple
         of each other and their normal vectors
         have an angle of 0 or 180 degrees between them
+
+        Usage Example:
+                    equation1 = 2x + 3y + 4z = 5
+                    equation2 = 3x + 2y - 6z = 9
+
+                    represent both equations as
+                    Planes3D objects...
+                    plane1 = Planes3D((2, 3, 4), 5)
+                    plane2 = Planes3D((3, 2, -6), 9)
+
+                    plane1.is_parallel_to(plane2)
+                    >> False
 
         :param vec2: A plane with same dim as self
         :return:

@@ -215,7 +215,7 @@ class Lines2D(object):
     def plot(self):
         """Plot a line in 2D,
 
-        Method is called on a Lines2D object.
+        This Method is called on a Lines2D object.
 
         Usage Example:
                     equation1 = 2x + 3y = 2
