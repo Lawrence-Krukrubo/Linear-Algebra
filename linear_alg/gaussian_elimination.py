@@ -304,7 +304,7 @@ class GaussianElimination(GeHelper):
             plt.scatter(x, y)
             plt.xlim(min(x, y) - 3, max(x, y) + 3)
             plt.ylim(min(x, y) - 3, max(x, y) + 3)
-            plt.title(f'Point in 2D: (X={x}, Y={y})', fontdict=title_dict)
+            plt.title(f'Point in 2D: (X= {x}, Y= {y})', fontdict=title_dict)
             plt.xlabel('X', fontdict=label_dict)
             plt.ylabel('Y', fontdict=label_dict, rotation=1.4)
             plt.grid(linestyle='dotted')

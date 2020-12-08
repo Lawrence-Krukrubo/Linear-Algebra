@@ -22,6 +22,11 @@ class Lines2D(object):
         for i in self.coefficients:
             assert type(i) in num, 'Coefficients  Must Be Numerical!'
 
+    def __str__(self):
+        ret = 'Lines2D Object:\n'
+        temp = f'Equation:\n {self.coefficients[0]}x {self.coefficients[1]}y = {self.constant_term}'
+        return ret+temp
+
     def is_parallel_to(self, other):
         """Confirm if two lines are parallel
 
@@ -107,8 +112,13 @@ class Lines2D(object):
         """
         # Let's assume x = 0
         # to find y, we substitute
-        x = 0
-        y = round(self.constant_term / self.coefficients[-1], 3)
+        x, y = 0, 0
+
+        # use a try-catch block in case of zero-division error
+        try:
+            y = round(self.constant_term / self.coefficients[-1], 3)
+        except ZeroDivisionError:
+            pass
         return x, y
 
     def find_x_intercept(self):
@@ -122,8 +132,13 @@ class Lines2D(object):
         """
         # Let's assume y = 0
         # to find , we substitute
-        y = 0
-        x = round(self.constant_term / self.coefficients[0], 3)
+        x, y = 0, 0
+
+        # use a try-catch block in case of zero-division error
+        try:
+            x = round(self.constant_term / self.coefficients[0], 3)
+        except ZeroDivisionError:
+            pass
         return x, y
 
     def find_slope_and_intercept(self):
@@ -149,8 +164,13 @@ class Lines2D(object):
         point1 = self.find_y_intercept()
         point2 = self.find_x_intercept()
 
-        slope = round((point1[-1] - point2[-1]) / (point1[0] - point2[0]), 4)
-        intercept = round(point1[-1], 4)
+        slope, intercept = 0, 0
+
+        # use a try-catch block in case of zero-division error
+        try:
+            slope = round((point1[-1] - point2[-1]) / (point1[0] - point2[0]), 4)
+        except ZeroDivisionError:
+            intercept = round(point1[-1], 4)
 
         return slope, intercept
 

@@ -4,7 +4,7 @@ import numpy as np
 
 
 class Planes3D(object):
-    """A class for creating and exploring Planes in 3D,
+    """Class for creating and exploring Planes in 3D,
     finding Intersections, Coefficients, and other properties
     for planes in 3-Dimensions.
     """
