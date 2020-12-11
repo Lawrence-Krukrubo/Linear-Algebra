@@ -363,6 +363,7 @@ class GaussianElimination(GeHelper):
         if len(sample) == 2:
             ax.arrow(sample[0], sample[1], dx*x_mag, dy*x_mag,
                      head_width=0.4, head_length=head_length, fc='red', ec='black', linewidth=2)
+
             plt.grid()
             if x[1] < 0 <= x[0]:
                 plt.xlim(sample[0] - 1, sample[0] + x[0] + 1)

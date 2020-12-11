@@ -579,13 +579,15 @@ class Vector(object):
 
         return round(triangle_area, 4)
 
-    def plot(self):
-        """Plot a vector in
-            2D or 3D
+    def plot2d(self):
+        """Plot a vector in 2-Dimension
 
         :return: None (just plots the vector)
         """
-        assert 2 <= self.dimension <= 3, 'ERROR: Dimension Can Only be 2D or 3D'
+        try:
+            assert 2 == self.dimension
+        except AssertionError:
+            return 'ERROR: Dimension Must be 2D'
 
         ax = plt.axes()
         sample = np.round(np.random.uniform(low=-5, high=5, size=(self.dimension,)))
@@ -594,31 +596,44 @@ class Vector(object):
         label_dict = {'size': 12, 'weight': 'bold'}
         plt.style.use('seaborn-white')
 
-        if self.dimension == 2:
-            ax.arrow(sample[0], sample[1], x[0], x[1],
-                     head_width=0.4, head_length=0.5, fc='red', ec='black', linewidth=3)
-            plt.grid()
-            if x[1] < 0 <= x[0]:
-                plt.xlim(sample[0]-1, sample[0]+x[0]+1)
-                plt.ylim((sample[1]+x[1])-1, sample[1]+1)
-                plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] + 0.15), fontweight='bold')
-            elif x[1] >= 0 <= x[0]:
-                plt.xlim(sample[0]-1, sample[0]+x[0]+1)
-                plt.ylim(sample[1]-1, sample[1]+x[1]+1)
-                plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] - 0.15), fontweight='bold')
-            elif x[0] < 0 <= x[1]:
-                plt.xlim((sample[0]+x[0])-1, sample[0]+1)
-                plt.ylim(sample[1]-1, (sample[1]+x[1])+1)
-                plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] + 0.15), fontweight='bold')
-            else:
-                plt.xlim((sample[0]+x[0])-1, sample[0]+1)
-                plt.ylim((sample[1]+x[1])-1, sample[1]+1)
-                plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] - 0.15), fontweight='bold')
+        x_mag = self.magnitude()
+        head_length = 0.5
+        dx, dy = [i / x_mag for i in x]
+        x_mag = x_mag - head_length
+                                        #x[0], x[1]
+        ax.arrow(sample[0], sample[1], dx*x_mag, dy*x_mag,
+                 head_width=0.4, head_length=head_length, fc='red', ec='black', linewidth=3)
 
-            plt.title(f'Vector({x[0]},{x[1]}): X= {x[0]}, Y= {x[1]}', fontdict=title_dict)
-            plt.xlabel('X', fontdict=label_dict)
-            plt.ylabel('Y', fontdict=label_dict, rotation=1.4)
-
+        plt.grid()
+        if x[1] < 0 <= x[0]:
+            plt.xlim(sample[0]-1, sample[0]+x[0]+1)
+            plt.ylim((sample[1]+x[1])-1, sample[1]+1)
+            plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] + 0.15), fontweight='bold')
+        elif x[1] >= 0 <= x[0]:
+            plt.xlim(sample[0]-1, sample[0]+x[0]+1)
+            plt.ylim(sample[1]-1, sample[1]+x[1]+1)
+            plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] - 0.15), fontweight='bold')
+        elif x[0] < 0 <= x[1]:
+            plt.xlim((sample[0]+x[0])-1, sample[0]+1)
+            plt.ylim(sample[1]-1, (sample[1]+x[1])+1)
+            plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] + 0.15), fontweight='bold')
         else:
-            pass
+            plt.xlim((sample[0]+x[0])-1, sample[0]+1)
+            plt.ylim((sample[1]+x[1])-1, sample[1]+1)
+            plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] - 0.15), fontweight='bold')
+
+        plt.title(f'Vector({x[0]},{x[1]}): X= {x[0]}, Y= {x[1]}', fontdict=title_dict)
+        plt.xlabel('X', fontdict=label_dict)
+        plt.ylabel('Y', fontdict=label_dict, rotation=1.4)
+
         plt.show()
+
+    def plot3d(self):
+        """Plot a vector in 3-Dimension
+
+        :return: None (just plots the vector)
+        """
+        try:
+            assert 3 == self.dimension
+        except AssertionError:
+            return 'ERROR: Dimension Must be 3D'
