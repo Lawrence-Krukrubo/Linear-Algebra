@@ -7,7 +7,7 @@ from .vector import Vector
 
 
 class GaussianElimination(GeHelper):
-    """A class to solve the problem of
+    """Class to solve the problem of
         linear intersections for linear
         objects/planes in n-dimensional-space
         where n >= 3, using the
@@ -19,6 +19,9 @@ class GaussianElimination(GeHelper):
     No_Solution = 'INCONSISTENT:(System of Equations with No Solution)'
     Infinite_Solution = 'INFINITE INTERSECTIONS:(System of Equations with Infinite Solutions)'
     Unique_Solution = 'INTERSECTION:(System of Equations with One Unique Solution)'
+
+    def __init__(self, dimension, objects):
+        super(GaussianElimination, self).__init__(dimension, objects)
 
     def compute_triangular_form(self):
         """Compute and return the triangular
@@ -359,7 +362,7 @@ class GaussianElimination(GeHelper):
 
         if len(sample) == 2:
             ax.arrow(sample[0], sample[1], dx*x_mag, dy*x_mag,
-                     head_width=0.4, head_length=head_length, fc='red', ec='black')
+                     head_width=0.4, head_length=head_length, fc='red', ec='black', linewidth=2)
             plt.grid()
             if x[1] < 0 <= x[0]:
                 plt.xlim(sample[0] - 1, sample[0] + x[0] + 1)

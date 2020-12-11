@@ -5,10 +5,10 @@ import numpy as np
 
 
 class HyperPlanes(object):
-    """A class for finding Intersections,
-              Coefficients, and other properties
-              for planes in 3-Dimensions.
-        """
+    """Class for creating and exploring HyperPlanes > 3D,
+    finding Intersections, Coefficients, and other properties
+    for HyperPlanes > 3-Dimensions.
+    """
     NO_NONZERO_ELTS_FOUND_MSG = 'No Non-zero elements found!'
 
     def __init__(self, dimension, coefficients=None, constant_term=None):

@@ -520,9 +520,18 @@ class Vector(object):
                     vec1.area_of_parallelogram(vec2)
                     >> <Some-Numerical-Value>
 
+        Zero-appended Example:
+                    vec1 = Vector([1,2])
+                    vec2 = Vector([2,4,5])
+
+                    On the function call, vec1 becomes...
+                    vec1 = Vector([1,2,0])
+
+                    vec1.area_of_parallelogram(vec2)
+                    >> <Some-Numerical-Value>
+
         :param vec2: vector of no more than 3 dimension
-                    same as self. If either is less than
-                    3D, zero-padding is done.
+                    same as self.
         :return: A number (magnitude of cross-product)
         """
         cross_vector = self.cross_product(vec2)
@@ -550,9 +559,18 @@ class Vector(object):
                     vec1.area_of_triangle(vec2)
                     >> <Some-Numerical-Value>
 
+        Zero-appended Example:
+                    vec1 = Vector([1,2])
+                    vec2 = Vector([2,4,5])
+
+                    On the function call, vec1 becomes...
+                    vec1 = Vector([1,2,0])
+
+                    vec1.area_of_triangle(vec2)
+                    >> <Some-Numerical-Value>
+
         :param vec2: vector of no more than 3 dimension
-                    same as self. If either vector is less
-                    than 3D, zero padding is done.
+                    same as self.
         :return: A number (area of triangle of 2 vectors)
         """
         cross_vector = self.cross_product(vec2)
@@ -578,7 +596,7 @@ class Vector(object):
 
         if self.dimension == 2:
             ax.arrow(sample[0], sample[1], x[0], x[1],
-                     head_width=0.4, head_length=0.5, fc='red', ec='black')
+                     head_width=0.4, head_length=0.5, fc='red', ec='black', linewidth=3)
             plt.grid()
             if x[1] < 0 <= x[0]:
                 plt.xlim(sample[0]-1, sample[0]+x[0]+1)
@@ -601,4 +619,6 @@ class Vector(object):
             plt.xlabel('X', fontdict=label_dict)
             plt.ylabel('Y', fontdict=label_dict, rotation=1.4)
 
+        else:
+            pass
         plt.show()

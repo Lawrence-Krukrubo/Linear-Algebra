@@ -6,7 +6,7 @@ from .hyper_planes import HyperPlanes
 
 
 class GeHelper():
-    """A class of helper functions
+    """Class of helper functions
         for the Gaussian-Elimination
         Algorithm
         """

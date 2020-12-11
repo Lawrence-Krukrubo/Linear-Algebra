@@ -27,6 +27,10 @@ class Lines2D(object):
         temp = f'Equation:\n {self.coefficients[0]}x {self.coefficients[1]}y = {self.constant_term}'
         return ret+temp
 
+    def __eq__(self, other):
+        self_other_constants = self.constant_term == other.constant_term
+        return self_other_constants and self.normal_vector.__eq__(other.normal_vector)
+
     def is_parallel_to(self, other):
         """Confirm if two lines are parallel
 
@@ -164,13 +168,13 @@ class Lines2D(object):
         point1 = self.find_y_intercept()
         point2 = self.find_x_intercept()
 
-        slope, intercept = 0, 0
+        slope, intercept = 0, round(point1[-1], 4)
 
         # use a try-catch block in case of zero-division error
         try:
             slope = round((point1[-1] - point2[-1]) / (point1[0] - point2[0]), 4)
         except ZeroDivisionError:
-            intercept = round(point1[-1], 4)
+            pass
 
         return slope, intercept
 
