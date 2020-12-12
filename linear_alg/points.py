@@ -1,9 +1,37 @@
 import matplotlib.pyplot as plt
-import numpy as np
+from matplotlib.patches import FancyArrowPatch
+from mpl_toolkits.mplot3d.proj3d import proj_transform
+from mpl_toolkits.mplot3d.axes3d import Axes3D
 from .vector import Vector
 
 
-class Point(object):
+class Arrow3D(FancyArrowPatch):
+    def __init__(self, x, y, z, dx, dy, dz, *args, **kwargs):
+        super().__init__((0,0), (0,0), *args, **kwargs)
+        self._xyz = (x,y,z)
+        self._dxdydz = (dx,dy,dz)
+
+    def draw(self, renderer):
+        x1,y1,z1 = self._xyz
+        dx,dy,dz = self._dxdydz
+        x2,y2,z2 = (x1+dx,y1+dy,z1+dz)
+
+        xs, ys, zs = proj_transform((x1,x2),(y1,y2),(z1,z2), renderer.M)
+        self.set_positions((xs[0],ys[0]),(xs[1],ys[1]))
+        super().draw(renderer)
+
+
+def _arrow3D(ax, x, y, z, dx, dy, dz, *args, **kwargs):
+    '''Add an 3d arrow to an `Axes3D` instance.'''
+
+    arrow = Arrow3D(x, y, z, dx, dy, dz, *args, **kwargs)
+    ax.add_artist(arrow)
+
+
+setattr(Axes3D,'arrow3D',_arrow3D)
+
+
+class Point:
     """ Class for manipulating points in 2D and 3D,
         exploring distance and points properties.
     """
@@ -48,12 +76,12 @@ class Point(object):
             # For 2D
             point1 = (1,2)
             point2 = (3,4)
-            GE.manhattan_distance(point1, point2)
+            Point.manhattan_distance(point1, point2)
 
             # For 3 and higher D
             point1 = (1, 2, 3)
             point2 = (4, 5,6)
-            GE.manhattan_distance(point1, point2)
+            Point.manhattan_distance(point1, point2)
 
         :param point1: A list or tuple of ints or floats
         :param point2: A list or tuple of ints or floats
@@ -83,26 +111,29 @@ class Point(object):
     def euclidean_distance(point1, point2):
         """Find the Euclidean distance between two points
 
-                point1 and point2 must be in same dimension and
-                each must be a tuple or a list.
+            The Euclidean distance between 2 points is simply
+            the magnitude of the vector connecting these points.
 
-                Example:
-                    import GaussianElimination as GE...
+            point1 and point2 must be in same dimension and
+            each must be a tuple or a list.
 
-                    # For 2D
-                    point1 = (1,2)
-                    point2 = (3,4)
-                    GE.euclidean_distance(point1, point2)
+            Example:
+                import GaussianElimination as GE...
 
-                    # For 3 and higher D
-                    point1 = (1, 2, 3)
-                    point2 = (4, 5,6)
-                    GE.euclidean_distance(point1, point2)
+                # For 2D
+                point1 = (1,2)
+                point2 = (3,4)
+                Point.euclidean_distance(point1, point2)
 
-                :param point1: A list or tuple of ints or floats
-                :param point2: A list or tuple of ints or floats
-                :return: An int or float of euclidean distance
-                """
+                # For 3 and higher D
+                point1 = (1, 2, 3)
+                point2 = (4, 5,6)
+                Point.euclidean_distance(point1, point2)
+
+            :param point1: A list or tuple of ints or floats
+            :param point2: A list or tuple of ints or floats
+            :return: An int or float of euclidean distance
+        """
         # Assert both points have same dimension
         # And both points are of type tuple or list
         count = 1
@@ -127,26 +158,26 @@ class Point(object):
         return round(distance_, 4)
 
     @staticmethod
-    def plot_point(points):
-        """Plot one or more points in 2D or 3D
+    def plot_point(point):
+        """Plot one point in 2D or 3D
 
         Example:
                 point1 = (2, 3)  # 2D
-                GE.plot_point(point1)
+                Point.plot_point(point1)
 
                 point2 = (2, 3, 4)  # 3D
-                GE.plot_point(point2)
+                Point.plot_points(point2)
 
         :param points: A tuple or triple of Ints or Floats
         :return: None (Just plots the point)
         """
         x, y, z = None, None, None
-        assert 2 <= len(points) <= 3, 'Points Must Have 2 or 3 Coordinates'
+        assert 2 <= len(point) <= 3, 'Points Must Have 2 or 3 Coordinates'
 
-        if len(points) < 3:
-            x, y = points
+        if len(point) < 3:
+            x, y = point
         else:
-            x, y, z = points
+            x, y, z = point
 
         title_dict = {'size': 14, 'weight': 'bold'}
         label_dict = {'size': 12, 'weight': 'bold'}
@@ -162,7 +193,7 @@ class Point(object):
             plt.grid(linestyle='dotted')
 
         else:
-            fig = plt.figure(figsize=(10, 6))
+            fig = plt.figure(figsize=(10, 8))
             ax = fig.add_subplot(111, projection='3d')
 
             ax.scatter(x, y, z, c='r', marker='o')
@@ -174,6 +205,36 @@ class Point(object):
         plt.show()
 
     @staticmethod
+    def plot_points(*args):
+        """Plot multiple points in 2D or 3D
+
+        All Points Must Either be 2D or 3D
+
+                Example 2D:
+                        point1 = (2, 3)
+                        point2 = (3, 4)
+                        point3 = (5, 6)
+                        Point.plot_points(point1, point2, point3)
+
+                Example 3D:
+                        point1 = (2, 3, 4)
+                        point2 = (3, 4, 5)
+                        point3 = (5, 6, 7)
+                        Point.plot_points(point1, point2, point3)
+
+                :param args: Multiple tuples or triples of points
+                :return: None (Just plots the point)
+                """
+
+        check = args[0]
+
+        for i in args:
+            try:
+                assert len(check) == len(i)
+            except AssertionError:
+                return 'ERROR: All Points Must be in Same Dimension(2D or 3D)'
+
+    @staticmethod
     def plot_points_2d_vec(point1, point2):
         """Given two Points in 2D
         plot a Vector from the 1st point
@@ -182,7 +243,7 @@ class Point(object):
             For Example in 2D:
                     point1 = (1, 2)
                     point2 = (3, 4)
-                    GE.plot_points_2_vec(point1, point2)
+                    Point.plot_points_2d_vec(point1, point2)
 
         :param point1: A tuple of Int or Float
         :param point2: A tuple of Int or Float
@@ -249,7 +310,7 @@ class Point(object):
             For Example in 3D:
                     point1 = (1, 2, 3)
                     point2 = (3, 4, 5)
-                    GE.plot_points_2_vec(point1, point2)
+                    Point.plot_points_3d_vec(point1, point2)
 
         :param point1: A triple of Int or Float
         :param point2: A triple of Int or Float
@@ -259,3 +320,35 @@ class Point(object):
             assert 3 == len(point1) == len(point2)
         except AssertionError:
             return 'ERROR: Each Point Dimension Must be 3D'
+
+        fig = plt.figure(figsize=(8, 6))
+        ax = fig.add_subplot(111, projection='3d')
+
+        coords = [i - j for i, j in zip(point2, point1)]
+        dx, dy, dz = coords
+        x, y, z = point1
+        lim = []
+        
+        for val1, val2 in zip(coords, point1):
+            if val1 < 0:
+                lim.append(val2+1)
+                lim.append(val1-3)
+            else:
+                lim.append(val2-1)
+                lim.append(val1+3)
+
+        ax.set_xlim(lim[0], lim[1])
+        ax.set_ylim(lim[2], lim[3])
+        ax.set_zlim(lim[4], lim[5])
+
+        ax.arrow3D(x, y, z,
+                   dx, dy, dz,
+                   mutation_scale=20,
+                   ec='green',
+                   fc='red')
+        ax.set_title(f'Vector:({dx}x, {dy}y, {dz}z)', fontsize=16, fontweight='bold')
+        ax.set_xlabel('X', fontsize=13, fontweight='bold')
+        ax.set_ylabel('Y', fontsize=13, fontweight='bold')
+        ax.set_zlabel('Z', fontsize=13, fontweight='bold')
+        fig.tight_layout()
+
