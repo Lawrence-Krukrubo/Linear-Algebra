@@ -22,7 +22,7 @@ class Arrow3D(FancyArrowPatch):
 
 
 def _arrow3D(ax, x, y, z, dx, dy, dz, *args, **kwargs):
-    '''Add an 3d arrow to an `Axes3D` instance.'''
+    """Add an 3d arrow to an `Axes3D` instance."""
 
     arrow = Arrow3D(x, y, z, dx, dy, dz, *args, **kwargs)
     ax.add_artist(arrow)
@@ -71,17 +71,19 @@ class Point:
         each must be a tuple or a list.
 
         Example:
-            import GaussianElimination as GE...
+            import Point...
 
             # For 2D
             point1 = (1,2)
             point2 = (3,4)
             Point.manhattan_distance(point1, point2)
+            >> <an-Int-or-Float>
 
             # For 3 and higher D
             point1 = (1, 2, 3)
             point2 = (4, 5,6)
             Point.manhattan_distance(point1, point2)
+            >> <an-Int-or-Float>
 
         :param point1: A list or tuple of ints or floats
         :param point2: A list or tuple of ints or floats
@@ -118,17 +120,19 @@ class Point:
             each must be a tuple or a list.
 
             Example:
-                import GaussianElimination as GE...
+                import Point...
 
                 # For 2D
                 point1 = (1,2)
                 point2 = (3,4)
                 Point.euclidean_distance(point1, point2)
+                >> <an-Int-or-Float>
 
                 # For 3 and higher D
                 point1 = (1, 2, 3)
                 point2 = (4, 5,6)
                 Point.euclidean_distance(point1, point2)
+                >> <an-Int-or-Float>
 
             :param point1: A list or tuple of ints or floats
             :param point2: A list or tuple of ints or floats
@@ -166,9 +170,9 @@ class Point:
                 Point.plot_point(point1)
 
                 point2 = (2, 3, 4)  # 3D
-                Point.plot_points(point2)
+                Point.plot_point(point2)
 
-        :param points: A tuple or triple of Ints or Floats
+        :param point: A tuple or triple of Ints or Floats
         :return: None (Just plots the point)
         """
         x, y, z = None, None, None
@@ -183,10 +187,10 @@ class Point:
         label_dict = {'size': 12, 'weight': 'bold'}
         plt.style.use('seaborn-white')
 
-        if z is None:
+        if not z:
             plt.scatter(x, y)
-            plt.xlim(min(x, y) - 3, max(x, y) + 3)
-            plt.ylim(min(x, y) - 3, max(x, y) + 3)
+            plt.xlim(min(x, y) - 3, max(x, y) + 2)
+            plt.ylim(min(x, y) - 3, max(x, y) + 2)
             plt.title(f'Point in 2D: (X= {x}, Y= {y})', fontdict=title_dict)
             plt.xlabel('X', fontdict=label_dict)
             plt.ylabel('Y', fontdict=label_dict, rotation=1.4)
@@ -200,6 +204,9 @@ class Point:
             ax.set_xlabel('X', fontdict=label_dict)
             ax.set_ylabel('Y', fontdict=label_dict)
             ax.set_zlabel('Z', fontdict=label_dict)
+            ax.set_xlim(auto=True)
+            ax.set_ylim(auto=True)
+            ax.set_zlim(auto=True)
             ax.set_title(f'Point in 3D: (X={x}, Y={y}, Z={z})', fontdict=title_dict)
 
         plt.show()
@@ -226,13 +233,50 @@ class Point:
                 :return: None (Just plots the point)
                 """
 
-        check = args[0]
+        title_dict = {'size': 14, 'weight': 'bold'}
+        label_dict = {'size': 12, 'weight': 'bold'}
+        plt.style.use('seaborn-white')
 
+        check = args[0]
+        x_list = []
+        y_list = []
+        z_list = []
         for i in args:
             try:
-                assert len(check) == len(i)
+                assert 2 <= len(check) == len(i) <= 3
+                if len(check) == 2:
+                    x_list.append(i[0])
+                    y_list.append(i[1])
+                else:
+                    x_list.append(i[0])
+                    y_list.append(i[1])
+                    z_list.append(i[2])
             except AssertionError:
                 return 'ERROR: All Points Must be in Same Dimension(2D or 3D)'
+
+        if not z_list:
+            plt.scatter(x_list, y_list)
+            plt.xlim(min(min(x_list), min(y_list)) - 2, max(max(x_list), max(y_list)) + 2)
+            plt.ylim(min(min(x_list), min(y_list)) - 2, max(max(x_list), max(y_list)) + 2)
+            plt.title(f'Points in 2D: (X= {x_list}, Y= {y_list})', fontdict=title_dict)
+            plt.xlabel('X', fontdict=label_dict)
+            plt.ylabel('Y', fontdict=label_dict, rotation=1.4)
+            plt.grid(linestyle='dotted')
+
+        else:
+            fig = plt.figure(figsize=(10, 8))
+            ax = fig.add_subplot(111, projection='3d')
+
+            ax.scatter(x_list, y_list, z_list, c='r', marker='o')
+            ax.set_xlabel('X', fontdict=label_dict)
+            ax.set_ylabel('Y', fontdict=label_dict)
+            ax.set_zlabel('Z', fontdict=label_dict)
+            ax.set_xlim(auto=True)
+            ax.set_ylim(auto=True)
+            ax.set_zlim(auto=True)
+            ax.set_title(f'Point in 3D: (X={x_list}, Y={y_list}, Z={z_list})', fontdict=title_dict)
+
+        plt.show()
 
     @staticmethod
     def plot_points_2d_vec(point1, point2):
