@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d.proj3d import proj_transform
 from mpl_toolkits.mplot3d.axes3d import Axes3D
+from mpl_toolkits.mplot3d.art3d import Text3D
 from .vector import Vector
 
 
@@ -293,9 +294,14 @@ class Point:
         :param point2: A tuple of Int or Float
         :return: None (Plots the vector connecting the points)
         """
+        check = 0
         try:
             assert 2 == len(point1) == len(point2)
+            check += 1
+            assert point1 != point2
         except AssertionError:
+            if check:
+                return 'ERROR: Point1 and Point2 Must not be Equal'
             return 'ERROR: Each Point Dimension Must be 2D'
 
         sample = [round(i, 1) for i in point1]
@@ -339,7 +345,7 @@ class Point:
                 plt.annotate(f'({temp[0]}, {temp[1]})', (temp[0], temp[1] - 0.25), fontweight='bold')
 
             plt.scatter([point1[0], point2[0]], [point1[1], point2[1]], color='black')
-            plt.title(f'Vector({x[0]},{x[1]}): X= {x[0]}, Y= {x[1]}', fontdict=title_dict)
+            plt.title(f'Vector:({x[0]}x, {x[1]}y)', fontdict=title_dict)
             plt.xlabel('X', fontdict=label_dict)
             plt.ylabel('Y', fontdict=label_dict, rotation=1.4)
 
@@ -360,9 +366,14 @@ class Point:
         :param point2: A triple of Int or Float
         :return: None (Plots the vector connecting the points)
         """
+        check = 0
         try:
             assert 3 == len(point1) == len(point2)
+            check += 1
+            assert point1 != point2
         except AssertionError:
+            if check:
+                return 'ERROR: Point1 and Point2 Must not be Equal'
             return 'ERROR: Each Point Dimension Must be 3D'
 
         fig = plt.figure(figsize=(8, 6))
@@ -373,13 +384,13 @@ class Point:
         x, y, z = point1
         lim = []
         
-        for val1, val2 in zip(coords, point1):
-            if val1 < 0:
-                lim.append(val2+1)
-                lim.append(val1-3)
+        for point, direction in zip(point1, coords):
+            if direction < 0:
+                lim.append(point)
+                lim.append(point+direction-1)
             else:
-                lim.append(val2-1)
-                lim.append(val1+3)
+                lim.append(point)
+                lim.append(point+direction+1)
 
         ax.set_xlim(lim[0], lim[1])
         ax.set_ylim(lim[2], lim[3])
@@ -394,5 +405,9 @@ class Point:
         ax.set_xlabel('X', fontsize=13, fontweight='bold')
         ax.set_ylabel('Y', fontsize=13, fontweight='bold')
         ax.set_zlabel('Z', fontsize=13, fontweight='bold')
+        ax.text(x=x, y=y-0.25, z=z, s=f'({x},{y},{z})', fontsize=12, fontweight='bold')
+        ax.text(x=x+dx, y=y+dy+0.25, z=z+dz, s=f'({x+dx},{y+dy},{z+dz})', fontsize=12, fontweight='bold')
         fig.tight_layout()
+
+        plt.show()
 
