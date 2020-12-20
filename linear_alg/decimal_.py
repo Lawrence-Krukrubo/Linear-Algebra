@@ -6,7 +6,7 @@ class MyDecimal(Decimal):
         Decimal object.
     """
     def is_near_zero(self, eps=1e-5):
-        """Confirm if a MyDecimal object has an
+        """Confirm if an object has an
             absolute value, less than a given
             epsilon threshold, close to zero.
 
@@ -23,8 +23,7 @@ class MyDecimal(Decimal):
 
         :param eps: A minute floating point limit used
                     to accommodate floating point leakages
-                    on objects whose values are supposed
-                    to be zero.
+                    on objects whose values may be zero.
         :return: True or False
         """
         return abs(self) < eps
