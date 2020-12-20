@@ -102,15 +102,16 @@ class GaussianElimination(GeHelper):
         return self_
 
     def unique_intersection(self):
-        """Confirm if SoE has a unique point
-        of intersection
+        """Confirm if a System of Equations has
+        a unique point of intersection
 
         This occurs when there are only distinct
-        pivot variables and the number of equations
-        are at least the number of dimension.
+        pivot variables, no free variables and
+        the number of equations are at least
+        the number of dimension.
 
-        :return: Return the tuple of unique points
-                or False
+        :return: Return the unique points
+                or False if no intersection.
         """
         p = self.compute_rref()
         non_zero_index = p.first_non_zero_index()
