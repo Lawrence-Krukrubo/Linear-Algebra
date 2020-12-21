@@ -163,7 +163,7 @@ class Point:
         return round(distance_, 4)
 
     @staticmethod
-    def plot_point(point):
+    def __plot_point(point):
         """Plot one point in 2D or 3D
 
         Example:
@@ -213,7 +213,7 @@ class Point:
         plt.show()
 
     @staticmethod
-    def plot_points(*args):
+    def __plot_points(*args):
         """Plot multiple points in 2D or 3D
 
         All Points Must Either be 2D or 3D
@@ -280,7 +280,7 @@ class Point:
         plt.show()
 
     @staticmethod
-    def plot_points_2d_vec(point1, point2):
+    def __plot_points_2d_vec(point1, point2):
         """Given two Points in 2D
         plot a Vector from the 1st point
         to the 2nd point
@@ -352,7 +352,7 @@ class Point:
         plt.show()
 
     @staticmethod
-    def plot_points_3d_vec(point1, point2):
+    def __plot_points_3d_vec(point1, point2):
         """Given two Points in 3D
         plot a Vector from the 1st point
         to the 2nd point

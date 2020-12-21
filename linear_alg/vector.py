@@ -579,7 +579,7 @@ class Vector(object):
 
         return round(triangle_area, 4)
 
-    def plot2d(self):
+    def __plot2d(self):
         """Plot a vector in 2-Dimension
 
         :return: None (just plots the vector)
@@ -622,13 +622,13 @@ class Vector(object):
             plt.ylim((sample[1]+x[1])-1, sample[1]+1)
             plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] - 0.15), fontweight='bold')
 
-        plt.title(f'Vector({x[0]},{x[1]}): X= {x[0]}, Y= {x[1]}', fontdict=title_dict)
+        plt.title(f'Vector:({x[0]}x, {x[1]}y)', fontdict=title_dict)
         plt.xlabel('X', fontdict=label_dict)
         plt.ylabel('Y', fontdict=label_dict, rotation=1.4)
 
         plt.show()
 
-    def plot3d(self):
+    def __plot3d(self):
         """Plot a vector in 3-Dimension
 
         :return: None (just plots the vector)
