@@ -294,16 +294,6 @@ class Point:
         :param point2: A tuple of Int or Float
         :return: None (Plots the vector connecting the points)
         """
-        check = 0
-        try:
-            assert 2 == len(point1) == len(point2)
-            check += 1
-            assert point1 != point2
-        except AssertionError:
-            if check:
-                return 'ERROR: Point1 and Point2 Must not be Equal'
-            return 'ERROR: Each Point Dimension Must be 2D'
-
         sample = [round(i, 1) for i in point1]
         temp = [round(i, 1) for i in point2]
         head_length = 0.5
@@ -366,16 +356,6 @@ class Point:
         :param point2: A triple of Int or Float
         :return: None (Plots the vector connecting the points)
         """
-        check = 0
-        try:
-            assert 3 == len(point1) == len(point2)
-            check += 1
-            assert point1 != point2
-        except AssertionError:
-            if check:
-                return 'ERROR: Point1 and Point2 Must not be Equal'
-            return 'ERROR: Each Point Dimension Must be 3D'
-
         fig = plt.figure(figsize=(8, 6))
         ax = fig.add_subplot(111, projection='3d')
 
@@ -411,3 +391,83 @@ class Point:
 
         plt.show()
 
+    @staticmethod
+    def plot_dir_vec(point1, point2):
+        """Given two Points in 2D or 3D
+            plot a Vector from the 1st point
+            to the 2nd point. Both points must
+            have the same dimension: 2D or 3D.
+
+            The Direction Vector is any Vector that
+            connects 2 points on a line, plane or hyper-plane.
+
+            For Example in 2D:
+                    point1 = (1, 2)
+                    point2 = (3, 4)
+                    Point.plot_dir_vec(point1, point2)
+
+            For Example in 3D:
+                    point1 = (1, 2, 3)
+                    point2 = (3, 4, 5)
+                    Point.plot_dir_vec(point1, point2)
+
+        :param point1: A tuple or triple of Int or Float
+        :param point2: A tuple or triple of Int or Float
+        :return: None (Plots the vector connecting both points)
+        """
+        check = 0
+        try:
+            assert 2 <= len(point1) == len(point2) <= 3
+            check += 1
+            assert not Point.__eq__(point1, point2)
+        except AssertionError:
+            if check:
+                return 'ERROR: Point1 and Point2 Must not be Equal'
+            return 'ERROR: Points Must Have Same Dimension (2D/3D).'
+
+        if len(point1) == 2:
+            Point.__plot_points_2d_vec(point1, point2)
+        else:
+            Point.__plot_points_3d_vec(point1, point2)
+
+    @staticmethod
+    def get_dir_vec(point1, point2):
+        """Given two Points, get the Vector
+            that connects point1 to point2.
+            Both points must have same dimension.
+
+            The Direction Vector is any Vector that
+            connects 2 points on a line, plane or hyper-plane.
+
+            For Example in 2D:
+                    point1 = (1, 2)
+                    point2 = (3, 4)
+                    Point.get_dir_vec(point1, point2)
+                    >> Vector([2, 2])
+
+            For Example in 3D:
+                    point1 = (1, 2, 3)
+                    point2 = (3, 4, 5)
+                    Point.get_dir_vec(point1, point2)
+                    >> Vector([2, 2, 2])
+
+        :param point1: A tuple or triple of Int or Float
+        :param point2: A tuple or triple of Int or Float
+        :return: a Vector object
+        """
+        check = 0
+        try:
+            assert len(point1) == len(point2) >= 2
+            check += 1
+            assert not Point.__eq__(point1, point2)
+        except AssertionError:
+            if check:
+                return 'ERROR: Point1 and Point2 Must not be Equal'
+            return 'ERROR: Points Must Have Same Dimension >= 2.'
+
+        coordinates = []
+
+        for i, j in zip(point2, point1):
+            coordinates.append(i - j)
+
+        return Vector(coordinates)
