@@ -2,8 +2,6 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d.proj3d import proj_transform
 from mpl_toolkits.mplot3d.axes3d import Axes3D
-from mpl_toolkits.mplot3d.art3d import Text3D
-from .vector import Vector
 
 
 class Arrow3D(FancyArrowPatch):
@@ -36,9 +34,6 @@ class Point:
     """ Class for manipulating points in 2D and 3D,
         exploring distance and points properties.
     """
-
-    def __init__(self):
-        pass
 
     @staticmethod
     def __eq__(*args):
@@ -188,10 +183,10 @@ class Point:
         label_dict = {'size': 12, 'weight': 'bold'}
         plt.style.use('seaborn-white')
 
-        if not z:
+        if z is None:
             plt.scatter(x, y)
-            plt.xlim(min(x, y) - 3, max(x, y) + 2)
-            plt.ylim(min(x, y) - 3, max(x, y) + 2)
+            plt.xlim(min(x, y) - 1, max(x, y) + 1)
+            plt.ylim(min(x, y) - 1, max(x, y) + 1)
             plt.title(f'Point in 2D: (X= {x}, Y= {y})', fontdict=title_dict)
             plt.xlabel('X', fontdict=label_dict)
             plt.ylabel('Y', fontdict=label_dict, rotation=1.4)
@@ -238,27 +233,24 @@ class Point:
         label_dict = {'size': 12, 'weight': 'bold'}
         plt.style.use('seaborn-white')
 
-        check = args[0]
         x_list = []
         y_list = []
         z_list = []
+
+        check = len(args[0])
         for i in args:
-            try:
-                assert 2 <= len(check) == len(i) <= 3
-                if len(check) == 2:
-                    x_list.append(i[0])
-                    y_list.append(i[1])
-                else:
-                    x_list.append(i[0])
-                    y_list.append(i[1])
-                    z_list.append(i[2])
-            except AssertionError:
-                return 'ERROR: All Points Must be in Same Dimension(2D or 3D)'
+            if check == 2:
+                x_list.append(i[0])
+                y_list.append(i[1])
+            else:
+                x_list.append(i[0])
+                y_list.append(i[1])
+                z_list.append(i[2])
 
         if not z_list:
             plt.scatter(x_list, y_list)
-            plt.xlim(min(min(x_list), min(y_list)) - 2, max(max(x_list), max(y_list)) + 2)
-            plt.ylim(min(min(x_list), min(y_list)) - 2, max(max(x_list), max(y_list)) + 2)
+            plt.xlim(min(x_list)-1, max(x_list)+1)
+            plt.ylim(min(y_list)-1, max(y_list)+1)
             plt.title(f'Points in 2D: (X= {x_list}, Y= {y_list})', fontdict=title_dict)
             plt.xlabel('X', fontdict=label_dict)
             plt.ylabel('Y', fontdict=label_dict, rotation=1.4)
@@ -272,15 +264,15 @@ class Point:
             ax.set_xlabel('X', fontdict=label_dict)
             ax.set_ylabel('Y', fontdict=label_dict)
             ax.set_zlabel('Z', fontdict=label_dict)
-            ax.set_xlim(auto=True)
-            ax.set_ylim(auto=True)
-            ax.set_zlim(auto=True)
+            ax.set_xlim(min(x_list)-1, max(x_list)+1)
+            ax.set_ylim(min(y_list)-1, max(y_list)+1)
+            ax.set_zlim(min(z_list)-1, max(z_list)+1)
             ax.set_title(f'Point in 3D: (X={x_list}, Y={y_list}, Z={z_list})', fontdict=title_dict)
 
         plt.show()
 
     @staticmethod
-    def __plot_points_2d_vec(point1, point2):
+    def plot_points_2d_vec(point1, point2):
         """Given two Points in 2D
         plot a Vector from the 1st point
         to the 2nd point
@@ -299,7 +291,7 @@ class Point:
         head_length = 0.5
         x = [j - k for j, k in zip(temp, sample)]
 
-        x_mag = Vector(x).magnitude()
+        x_mag = (sum([i**2 for i in x]))**0.5
         dx, dy = [i / x_mag for i in x]
         x_mag = x_mag - head_length
 
@@ -342,7 +334,7 @@ class Point:
         plt.show()
 
     @staticmethod
-    def __plot_points_3d_vec(point1, point2):
+    def plot_points_3d_vec(point1, point2):
         """Given two Points in 3D
         plot a Vector from the 1st point
         to the 2nd point
@@ -392,82 +384,35 @@ class Point:
         plt.show()
 
     @staticmethod
-    def plot_dir_vec(point1, point2):
-        """Given two Points in 2D or 3D
-            plot a Vector from the 1st point
-            to the 2nd point. Both points must
-            have the same dimension: 2D or 3D.
+    def plot_points(*args):
+        """Plot one or more points in 2D or 3D
 
-            The Direction Vector is any Vector that
-            connects 2 points on a line, plane or hyper-plane.
+            All Points Must Either be 2D or 3D
 
-            For Example in 2D:
-                    point1 = (1, 2)
-                    point2 = (3, 4)
-                    Point.plot_dir_vec(point1, point2)
+                Example 2D:
+                        point1 = (2, 3)
+                        point2 = (3, 4)
+                        point3 = (5, 6)
+                        Point.plot_points(point1, point2, point3)
 
-            For Example in 3D:
-                    point1 = (1, 2, 3)
-                    point2 = (3, 4, 5)
-                    Point.plot_dir_vec(point1, point2)
+                Example 3D:
+                        point1 = (2, 3, 4)
+                        point2 = (3, 4, 5)
+                        point3 = (5, 6, 7)
+                        Point.plot_points(point1, point2, point3)
 
-        :param point1: A tuple or triple of Int or Float
-        :param point2: A tuple or triple of Int or Float
-        :return: None (Plots the vector connecting both points)
+        :param args: Multiple tuples or triples of points
+        :return: None (Just plots the point)
         """
-        check = 0
-        try:
-            assert 2 <= len(point1) == len(point2) <= 3
-            check += 1
-            assert not Point.__eq__(point1, point2)
-        except AssertionError:
-            if check:
-                return 'ERROR: Point1 and Point2 Must not be Equal'
-            return 'ERROR: Points Must Have Same Dimension (2D/3D).'
+        check = len(args[0])
+        for point in args:
+            try:
+                assert len(point) == check
+                assert 2 <= check <= 3
+            except AssertionError:
+                return 'ERROR: All Dimensions Must == 2D or 3D'
 
-        if len(point1) == 2:
-            Point.__plot_points_2d_vec(point1, point2)
+        if len(args) == 1:
+            Point.__plot_point(args[0])
         else:
-            Point.__plot_points_3d_vec(point1, point2)
-
-    @staticmethod
-    def get_dir_vec(point1, point2):
-        """Given two Points, get the Vector
-            that connects point1 to point2.
-            Both points must have same dimension.
-
-            The Direction Vector is any Vector that
-            connects 2 points on a line, plane or hyper-plane.
-
-            For Example in 2D:
-                    point1 = (1, 2)
-                    point2 = (3, 4)
-                    Point.get_dir_vec(point1, point2)
-                    >> Vector([2, 2])
-
-            For Example in 3D:
-                    point1 = (1, 2, 3)
-                    point2 = (3, 4, 5)
-                    Point.get_dir_vec(point1, point2)
-                    >> Vector([2, 2, 2])
-
-        :param point1: A tuple or triple of Int or Float
-        :param point2: A tuple or triple of Int or Float
-        :return: a Vector object
-        """
-        check = 0
-        try:
-            assert len(point1) == len(point2) >= 2
-            check += 1
-            assert not Point.__eq__(point1, point2)
-        except AssertionError:
-            if check:
-                return 'ERROR: Point1 and Point2 Must not be Equal'
-            return 'ERROR: Points Must Have Same Dimension >= 2.'
-
-        coordinates = []
-
-        for i, j in zip(point2, point1):
-            coordinates.append(i - j)
-
-        return Vector(coordinates)
+            Point.__plot_points(*args)

@@ -1,6 +1,6 @@
 import math
 import numpy as np
-import matplotlib.pyplot as plt
+from .points import Point
 
 
 class Vector(object):
@@ -579,61 +579,99 @@ class Vector(object):
 
         return round(triangle_area, 4)
 
-    def __plot2d(self):
-        """Plot a vector in 2-Dimension
+    @staticmethod
+    def get_dir_vec(point1, point2):
+        """Given two Points, get the Vector
+            that connects point1 to point2.
+            Both points must have same dimension.
 
-        :return: None (just plots the vector)
+            The Direction Vector is any Vector that
+            connects 2 points on a line, plane or hyper-plane.
+
+            For Example in 2D:
+                    point1 = (1, 2)
+                    point2 = (3, 4)
+                    Point.get_dir_vec(point1, point2)
+                    >> Vector([2, 2])
+
+            For Example in 3D:
+                    point1 = (1, 2, 3)
+                    point2 = (3, 4, 5)
+                    Point.get_dir_vec(point1, point2)
+                    >> Vector([2, 2, 2])
+
+        :param point1: A tuple or triple of Int or Float
+        :param point2: A tuple or triple of Int or Float
+        :return: a Vector object
         """
+        check = 0
         try:
-            assert 2 == self.dimension
+            assert len(point1) == len(point2) >= 2
+            check += 1
+            assert not point1 == point2
         except AssertionError:
-            return 'ERROR: Dimension Must be 2D'
+            if check:
+                return 'ERROR: Point1 and Point2 Must not be Equal'
+            return 'ERROR: Points Must Have Same Dimension >= 2.'
 
-        ax = plt.axes()
-        sample = np.round(np.random.uniform(low=-5, high=5, size=(self.dimension,)))
-        x = [round(i, 1) for i in self.coordinates]
-        title_dict = {'size': 14, 'weight': 'bold'}
-        label_dict = {'size': 12, 'weight': 'bold'}
-        plt.style.use('seaborn-white')
+        coordinates = []
 
-        x_mag = self.magnitude()
-        head_length = 0.5
-        dx, dy = [i / x_mag for i in x]
-        x_mag = x_mag - head_length
-                                        #x[0], x[1]
-        ax.arrow(sample[0], sample[1], dx*x_mag, dy*x_mag,
-                 head_width=0.4, head_length=head_length, fc='red', ec='black', linewidth=3)
+        for i, j in zip(point2, point1):
+            coordinates.append(i - j)
 
-        plt.grid()
-        if x[1] < 0 <= x[0]:
-            plt.xlim(sample[0]-1, sample[0]+x[0]+1)
-            plt.ylim((sample[1]+x[1])-1, sample[1]+1)
-            plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] + 0.15), fontweight='bold')
-        elif x[1] >= 0 <= x[0]:
-            plt.xlim(sample[0]-1, sample[0]+x[0]+1)
-            plt.ylim(sample[1]-1, sample[1]+x[1]+1)
-            plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] - 0.15), fontweight='bold')
-        elif x[0] < 0 <= x[1]:
-            plt.xlim((sample[0]+x[0])-1, sample[0]+1)
-            plt.ylim(sample[1]-1, (sample[1]+x[1])+1)
-            plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] + 0.15), fontweight='bold')
+        return Vector(coordinates)
+
+    @staticmethod
+    def plot_dir_vec(point1, point2):
+        """Given two Points in 2D or 3D
+            plot a Vector from the 1st point
+            to the 2nd point. Both points must
+            have the same dimension: 2D or 3D.
+
+            The Direction Vector is any Vector that
+            connects 2 points on a line, plane or hyper-plane.
+
+            For Example in 2D:
+                    point1 = (1, 2)
+                    point2 = (3, 4)
+                    Point.plot_dir_vec(point1, point2)
+
+            For Example in 3D:
+                    point1 = (1, 2, 3)
+                    point2 = (3, 4, 5)
+                    Point.plot_dir_vec(point1, point2)
+
+        :param point1: A tuple or triple of Int or Float
+        :param point2: A tuple or triple of Int or Float
+        :return: None (Plots the vector connecting both points)
+        """
+        check = 0
+        try:
+            assert 2 <= len(point1) == len(point2) <= 3
+            check += 1
+            assert not Point.__eq__(point1, point2)
+        except AssertionError:
+            if check:
+                return 'ERROR: Point1 and Point2 Must not be Equal'
+            return 'ERROR: Points Must Have Same Dimension (2D/3D).'
+
+        if len(point1) == 2:
+            Point.plot_points_2d_vec(point1, point2)
         else:
-            plt.xlim((sample[0]+x[0])-1, sample[0]+1)
-            plt.ylim((sample[1]+x[1])-1, sample[1]+1)
-            plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] - 0.15), fontweight='bold')
+            Point.plot_points_3d_vec(point1, point2)
 
-        plt.title(f'Vector:({x[0]}x, {x[1]}y)', fontdict=title_dict)
-        plt.xlabel('X', fontdict=label_dict)
-        plt.ylabel('Y', fontdict=label_dict, rotation=1.4)
-
-        plt.show()
-
-    def __plot3d(self):
-        """Plot a vector in 3-Dimension
+    def plot(self):
+        """Plot a vector in 2D or 3D.
 
         :return: None (just plots the vector)
         """
+
         try:
-            assert 3 == self.dimension
+            assert 2 <= self.dimension <= 3
         except AssertionError:
-            return 'ERROR: Dimension Must be 3D'
+            return "ERROR: Vector Dimension Must be 2D or 3D"
+
+        point1 = list(np.round(np.random.uniform(low=-5, high=5, size=(self.dimension,))))
+        point2 = [float(i) + j for i, j in zip(point1, self.coordinates)]
+
+        Vector.plot_dir_vec(point1, point2)
