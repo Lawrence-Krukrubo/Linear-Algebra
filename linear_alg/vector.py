@@ -672,6 +672,6 @@ class Vector(object):
             return "ERROR: Vector Dimension Must be 2D or 3D"
 
         point1 = list(np.round(np.random.uniform(low=-5, high=5, size=(self.dimension,))))
-        point2 = [float(i) + j for i, j in zip(point1, self.coordinates)]
+        point2 = [i + j for i, j in zip(point1, self.coordinates)]
 
         Vector.plot_dir_vec(point1, point2)

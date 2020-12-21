@@ -5,6 +5,9 @@ from mpl_toolkits.mplot3d.axes3d import Axes3D
 
 
 class Arrow3D(FancyArrowPatch):
+    """Class to instantiate an arrow in 3D
+
+    """
     def __init__(self, x, y, z, dx, dy, dz, *args, **kwargs):
         super().__init__((0,0), (0,0), *args, **kwargs)
         self._xyz = (x,y,z)
@@ -21,13 +24,13 @@ class Arrow3D(FancyArrowPatch):
 
 
 def _arrow3D(ax, x, y, z, dx, dy, dz, *args, **kwargs):
-    """Add an 3d arrow to an `Axes3D` instance."""
+    """Add a 3d arrow to an `Axes3D` instance."""
 
     arrow = Arrow3D(x, y, z, dx, dy, dz, *args, **kwargs)
     ax.add_artist(arrow)
 
 
-setattr(Axes3D,'arrow3D',_arrow3D)
+setattr(Axes3D, 'arrow3D', _arrow3D)
 
 
 class Point:
@@ -286,10 +289,10 @@ class Point:
         :param point2: A tuple of Int or Float
         :return: None (Plots the vector connecting the points)
         """
-        sample = [round(i, 1) for i in point1]
-        temp = [round(i, 1) for i in point2]
+        point1 = [round(i, 1) for i in point1]
+        point2 = [round(i, 1) for i in point2]
         head_length = 0.5
-        x = [j - k for j, k in zip(temp, sample)]
+        x = [round(j - k, 1) for j, k in zip(point2, point1)]
 
         x_mag = (sum([i**2 for i in x]))**0.5
         dx, dy = [i / x_mag for i in x]
@@ -300,31 +303,31 @@ class Point:
         label_dict = {'size': 12.5, 'weight': 'bold'}
         plt.style.use('seaborn-white')
 
-        if len(sample) == 2:
-            ax.arrow(sample[0], sample[1], dx * x_mag, dy * x_mag,
+        if len(point1) == 2:
+            ax.arrow(point1[0], point1[1], dx * x_mag, dy * x_mag,
                      head_width=0.4, head_length=head_length, fc='red', ec='black', linewidth=2)
 
             plt.grid()
             if x[1] < 0 <= x[0]:
-                plt.xlim(sample[0] - 1, sample[0] + x[0] + 1)
-                plt.ylim((sample[1] + x[1]) - 1, sample[1] + 1)
-                plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] + 0.15), fontweight='bold')
-                plt.annotate(f'({temp[0]}, {temp[1]})', (temp[0], temp[1] - 0.25), fontweight='bold')
+                plt.xlim(point1[0] - 1, point1[0] + x[0] + 1)
+                plt.ylim((point1[1] + x[1]) - 1, point1[1] + 1)
+                plt.annotate(f'({point1[0]}, {point1[1]})', (point1[0], point1[1] + 0.15), fontweight='bold')
+                plt.annotate(f'({point2[0]}, {point2[1]})', (point2[0], point2[1] - 0.25), fontweight='bold')
             elif x[1] >= 0 <= x[0]:
-                plt.xlim(sample[0] - 1, sample[0] + x[0] + 1)
-                plt.ylim(sample[1] - 1, sample[1] + x[1] + 1)
-                plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] - 0.15), fontweight='bold')
-                plt.annotate(f'({temp[0]}, {temp[1]})', (temp[0], temp[1] + 0.15), fontweight='bold')
+                plt.xlim(point1[0] - 1, point1[0] + x[0] + 1)
+                plt.ylim(point1[1] - 1, point1[1] + x[1] + 1)
+                plt.annotate(f'({point1[0]}, {point1[1]})', (point1[0], point1[1] - 0.15), fontweight='bold')
+                plt.annotate(f'({point2[0]}, {point2[1]})', (point2[0], point2[1] + 0.15), fontweight='bold')
             elif x[0] < 0 <= x[1]:
-                plt.xlim((sample[0] + x[0]) - 1, sample[0] + 1)
-                plt.ylim(sample[1] - 1, (sample[1] + x[1]) + 1)
-                plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] + 0.15), fontweight='bold')
-                plt.annotate(f'({temp[0]}, {temp[1]})', (temp[0], temp[1] + 0.15), fontweight='bold')
+                plt.xlim((point1[0] + x[0]) - 1, point1[0] + 1)
+                plt.ylim(point1[1] - 1, (point1[1] + x[1]) + 1)
+                plt.annotate(f'({point1[0]}, {point1[1]})', (point1[0], point1[1] + 0.15), fontweight='bold')
+                plt.annotate(f'({point2[0]}, {point2[1]})', (point2[0], point2[1] + 0.15), fontweight='bold')
             else:
-                plt.xlim((sample[0] + x[0]) - 1, sample[0] + 1)
-                plt.ylim((sample[1] + x[1]) - 1, sample[1] + 1)
-                plt.annotate(f'({sample[0]}, {sample[1]})', (sample[0], sample[1] - 0.15), fontweight='bold')
-                plt.annotate(f'({temp[0]}, {temp[1]})', (temp[0], temp[1] - 0.25), fontweight='bold')
+                plt.xlim((point1[0] + x[0]) - 1, point1[0] + 1)
+                plt.ylim((point1[1] + x[1]) - 1, point1[1] + 1)
+                plt.annotate(f'({point1[0]}, {point1[1]})', (point1[0], point1[1] - 0.15), fontweight='bold')
+                plt.annotate(f'({point2[0]}, {point2[1]})', (point2[0], point2[1] - 0.25), fontweight='bold')
 
             plt.scatter([point1[0], point2[0]], [point1[1], point2[1]], color='black')
             plt.title(f'Vector:({x[0]}x, {x[1]}y)', fontdict=title_dict)
@@ -351,7 +354,9 @@ class Point:
         fig = plt.figure(figsize=(8, 6))
         ax = fig.add_subplot(111, projection='3d')
 
-        coords = [i - j for i, j in zip(point2, point1)]
+        point1 = [round(i, 1) for i in point1]
+        point2 = [round(i, 1) for i in point2]
+        coords = [round(i - j, 1) for i, j in zip(point2, point1)]
         dx, dy, dz = coords
         x, y, z = point1
         lim = []
@@ -378,7 +383,12 @@ class Point:
         ax.set_ylabel('Y', fontsize=13, fontweight='bold')
         ax.set_zlabel('Z', fontsize=13, fontweight='bold')
         ax.text(x=x, y=y-0.25, z=z, s=f'({x},{y},{z})', fontsize=12, fontweight='bold')
-        ax.text(x=x+dx, y=y+dy+0.25, z=z+dz, s=f'({x+dx},{y+dy},{z+dz})', fontsize=12, fontweight='bold')
+        ax.text(x=x+dx,
+                y=y+dy+0.25,
+                z=z+dz,
+                s=f'({round(x+dx,1)},{round(y+dy,1)},{round(z+dz,1)})',
+                fontsize=12,
+                fontweight='bold')
         fig.tight_layout()
 
         plt.show()
